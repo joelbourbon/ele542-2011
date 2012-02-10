@@ -32,6 +32,7 @@ private:
 	
 public:
   // Constructor
+  bool LoopBackOn;
   Uart();
   Buffer_Reception  RX_Buffer;
   Buffer_Envoi      TX_Buffer;

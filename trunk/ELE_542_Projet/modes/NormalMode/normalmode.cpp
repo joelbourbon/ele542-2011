@@ -10,10 +10,14 @@
 /************************************************************************/
 
 #include "normalmode.h"
+#include <util/delay.h>
+
+#define F_CPU 16000000
 
 void NormalMode::init()
 {
-	
+  s.uart.TX_Buffer.push(0xFE);
+  s.uart.LoopBackOn = false;
 }
 
 void NormalMode::loop()
@@ -24,7 +28,26 @@ void NormalMode::loop()
 	//UDR = wSend.Commande;
 	//UDR = wSend.Vitesse;
 	//UDR = wSend.Angle;
-	
-	s.uart.uart_loopback('a');
-	
+  
+  _delay_ms(2000);
+  
+  trame TEST;
+  TEST = s.uart.RX_Buffer.pull(); 
+  s.uart.TX_Buffer.push(TEST.Vitesse);
+  s.uart.TX_Buffer.push(TEST.Angle);
+  s.uart.TX_Buffer.sendData();
+  
+  
+  
+  /*//s.uart.TX_Buffer.push(TEST.Vitesse);
+  //s.uart.TX_Buffer.push(TEST.Angle);
+  s.uart.TX_Buffer.Print("CACA");
+  s.uart.TX_Buffer.push(0xFF);
+
+
+  s.uart.TX_Buffer.sendData();
+  
+  s.uart.LoopBackOn = true;*/
+  
+  
 }		
