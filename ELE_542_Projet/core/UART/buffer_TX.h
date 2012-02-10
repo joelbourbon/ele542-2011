@@ -15,18 +15,22 @@
 #include <stdint.h>
 #include <avr/io.h>
 #include <string.h>
+#include <avr/interrupt.h>
+
+#define TAILLE_TX_BUFFER 128
 
 class Buffer_Envoi{
 
 private:
-  uint8_t pile[128];
-  
-  void sendData();
+  uint8_t pile[TAILLE_TX_BUFFER];
+  uint8_t lecture;
+  uint8_t ecriture;  
   
 public:
-  void push(char iByte);
   void Print(const char* iString);
   char pull();
+  void push(char iByte);
+  void sendData();
   uint8_t countData;
 };
 

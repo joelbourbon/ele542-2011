@@ -30,6 +30,7 @@ private:
   uint8_t pile[12];
   
 public:
+  Buffer_Reception();
   void push(uint8_t iByte);
   trame& pull();
 };

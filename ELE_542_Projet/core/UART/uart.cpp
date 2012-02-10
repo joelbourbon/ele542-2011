@@ -46,7 +46,8 @@ Uart::Uart()
 void Uart::uart_loopback(uint8_t iByte)
 {
 	RX_Buffer.push(iByte);  // Store dans le buffer du UART
-	UDR = iByte;            // Loop back directly to UDR to TX
+  if(LoopBackOn)
+	  UDR = iByte;            // Loop back directly to UDR to TX
 }
 
 ISR(USART_RXC_vect)
@@ -57,6 +58,6 @@ ISR(USART_RXC_vect)
 
 ISR(USART_TXC_vect)
 {
-	if(s.uart.TX_Buffer.countData != 0)
+	if(s.uart.TX_Buffer.countData > 0)
 	  UDR = s.uart.TX_Buffer.pull();
 }	
