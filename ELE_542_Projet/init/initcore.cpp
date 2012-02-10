@@ -10,7 +10,7 @@
 /************************************************************************/
 
 
-#include "init/initcore.h"
+#include "initcore.h"
 
 CoreInit::CoreInit() :
     uart()
