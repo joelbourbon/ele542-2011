@@ -1,0 +1,6 @@
+/Teleguidage/ComPort=null
+/Teleguidage/Parity=NONE
+/Teleguidage/Baudrate=9600
+/Teleguidage/Databit=8
+/Teleguidage/Stopbit=1
+/Teleguidage/Flowcontrol=NONE
