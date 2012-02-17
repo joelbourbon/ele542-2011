@@ -21,7 +21,7 @@
 extern "C" void __vector_13(); // ISR(USART_RXC_vect)
 extern "C" void __vector_15(); // ISR(USART_RXC_vect)
 
-class Uart
+class uart
 {
 	
 private:
@@ -33,7 +33,7 @@ private:
 public:
   // Constructor
   bool LoopBackOn;
-  Uart();
+  uart();
   Buffer_Reception  RX_Buffer;
   Buffer_Envoi      TX_Buffer;
   

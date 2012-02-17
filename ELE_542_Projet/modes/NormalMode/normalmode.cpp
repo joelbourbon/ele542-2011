@@ -16,8 +16,8 @@
 
 void NormalMode::init()
 {
-  s.uart.TX_Buffer.push(0xFE);
-  s.uart.LoopBackOn = false;
+  s.Uart.TX_Buffer.push(0xFE);
+  s.Uart.LoopBackOn = false;
 }
 
 void NormalMode::loop()
@@ -32,22 +32,25 @@ void NormalMode::loop()
   _delay_ms(2000);
   
   trame TEST;
-  TEST = s.uart.RX_Buffer.pull(); 
-  s.uart.TX_Buffer.push(TEST.Vitesse);
-  s.uart.TX_Buffer.push(TEST.Angle);
-  s.uart.TX_Buffer.sendData();
+  TEST = s.Uart.RX_Buffer.pull(); 
+  s.Uart.TX_Buffer.push(TEST.Commande);
+  s.Uart.TX_Buffer.push(TEST.Vitesse);
+  s.Uart.TX_Buffer.push(TEST.Angle);
+  s.Uart.TX_Buffer.sendData();
   
   
   
-  /*//s.uart.TX_Buffer.push(TEST.Vitesse);
+  
+  
+  //s.uart.TX_Buffer.push(TEST.Vitesse);
   //s.uart.TX_Buffer.push(TEST.Angle);
-  s.uart.TX_Buffer.Print("CACA");
-  s.uart.TX_Buffer.push(0xFF);
-
-
-  s.uart.TX_Buffer.sendData();
-  
-  s.uart.LoopBackOn = true;*/
+  //s.uart.TX_Buffer.Print("CACA");
+  //s.uart.TX_Buffer.push(0xFF);
+  //
+  //
+  //s.uart.TX_Buffer.sendData();
+  //
+  //s.uart.LoopBackOn = true;
   
   
 }		

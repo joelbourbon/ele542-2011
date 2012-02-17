@@ -16,6 +16,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "core/UART/uart.h"
+#include "core/Timer/timer1.h"
 
 class CoreInit
 {
@@ -24,7 +25,8 @@ public:
 	CoreInit();
 
 public:	
-	Uart uart;
+	uart Uart;
+	timer1 Timer1;
 	
 	 
 	
