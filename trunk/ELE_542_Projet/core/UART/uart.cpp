@@ -13,7 +13,7 @@
 #include <singleton.h>
 #include "uart.h"
 
-Uart::Uart()
+uart::uart()
 {
 	//
 	// Complete configuration of the UART
@@ -43,7 +43,7 @@ Uart::Uart()
   // RXB8 & TXB8 are used as Read/Write register for 9 bits long messages (With UDR)
 }
 
-void Uart::uart_loopback(uint8_t iByte)
+void uart::uart_loopback(uint8_t iByte)
 {
 	RX_Buffer.push(iByte);  // Store dans le buffer du UART
   if(LoopBackOn)
@@ -52,12 +52,12 @@ void Uart::uart_loopback(uint8_t iByte)
 
 ISR(USART_RXC_vect)
 {
-	s.uart.wReceivedByte = UDR;
-	s.uart.uart_loopback(s.uart.wReceivedByte);
+	s.Uart.wReceivedByte = UDR;
+	s.Uart.uart_loopback(s.Uart.wReceivedByte);
 }
 
 ISR(USART_TXC_vect)
 {
-	if(s.uart.TX_Buffer.countData > 0)
-	  UDR = s.uart.TX_Buffer.pull();
+	if(s.Uart.TX_Buffer.countData > 0)
+	  UDR = s.Uart.TX_Buffer.pull();
 }	

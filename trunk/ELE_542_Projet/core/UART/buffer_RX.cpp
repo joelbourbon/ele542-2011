@@ -45,6 +45,9 @@ void Buffer_Reception::push(uint8_t iByte)
 trame& Buffer_Reception::pull()
 {
 	trame derniereTrame;
+	derniereTrame.Angle = 0;
+	derniereTrame.Commande = 0;
+	derniereTrame.Vitesse = 0;
 	
 	if(debut_derniere == 100)
 	  return derniereTrame;
