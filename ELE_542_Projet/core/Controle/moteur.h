@@ -23,6 +23,11 @@
 
 #define Fpwm (10000)
 
+#define DIR_G1 2
+#define DIR_G2 3
+#define DIR_D1 6
+#define DIR_D2 7
+
 class moteur
 {
 	

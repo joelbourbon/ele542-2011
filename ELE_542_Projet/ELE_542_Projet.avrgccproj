@@ -106,6 +106,18 @@
     <Compile Include="core\Controle\moteur.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="core\PIN\pin.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="core\PIN\pin.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="core\Timer\timer0.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="core\Timer\timer0.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="core\Timer\timer1.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -159,6 +171,7 @@
     <Folder Include="core\" />
     <Folder Include="core\" />
     <Folder Include="core\Controle" />
+    <Folder Include="core\PIN" />
     <Folder Include="core\Timer" />
     <Folder Include="core\UART\" />
     <Folder Include="core\UART\" />

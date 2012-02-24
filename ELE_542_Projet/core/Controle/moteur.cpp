@@ -56,7 +56,23 @@ void moteur::CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd)
 	Duty_D = (Duty_D > 0.99) ? 0.99 : ((Duty_D < -0.99) ? -0.99 : Duty_D);
 	Duty_G = (Duty_G > 0.99) ? 0.99 : ((Duty_G < -0.99) ? -0.99 : Duty_G);
 	
-	Timer1.setCompareValueRight(Duty_D);
-	Timer1.setCompareValueLeft(Duty_G);
+	//MOTEUR DROIT
+	if(Duty_D > 0)
+	  DDRD = (1 << DIR_D1) | (0 << DIR_D2);
+	else if(Duty_D < 0)
+	  DDRD = (0 << DIR_D1) | (1 << DIR_D2);
+	else
+	  DDRD = (0 << DIR_D1) | (0 << DIR_D2);
+	  
+	//MOTEUR DROIT
+	if(Duty_G > 0)
+	  DDRD = (1 << DIR_G1) | (0 << DIR_G2);
+	else if(Duty_D < 0)
+	  DDRD = (0 << DIR_G1) | (1 << DIR_G2);
+	else
+	  DDRD = (0 << DIR_G1) | (0 << DIR_G2);
+	
+	Timer1.setCompareValueRight(Duty_D * (float)Timer1.mTop_Value);
+	Timer1.setCompareValueLeft(Duty_G  * (float)Timer1.mTop_Value);
 }
 
