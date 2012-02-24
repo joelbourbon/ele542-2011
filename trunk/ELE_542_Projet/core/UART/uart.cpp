@@ -19,6 +19,7 @@ uart::uart()
 	// Complete configuration of the UART
 	// Note : This is too much but education oriented
 	//
+	LoopBackOn = true;
 	
 	// USART Control and Status Register C
 	UCSRC = (1 << URSEL)  // Programming UCSRC

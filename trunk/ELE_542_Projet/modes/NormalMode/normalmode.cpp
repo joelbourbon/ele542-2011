@@ -16,41 +16,26 @@
 
 void NormalMode::init()
 {
-  s.Uart.TX_Buffer.push(0xFE);
-  s.Uart.LoopBackOn = false;
+  //s.Uart.TX_Buffer.push(0xFE);
+  //s.Uart.LoopBackOn = false;
 }
 
 void NormalMode::loop()
 {
-	//trame wSend;
-	//wSend = s.uart.RX_Buffer.pull();
-	//
-	//UDR = wSend.Commande;
-	//UDR = wSend.Vitesse;
-	//UDR = wSend.Angle;
-  
-  _delay_ms(2000);
-  
-  trame TEST;
-  TEST = s.Uart.RX_Buffer.pull(); 
-  s.Uart.TX_Buffer.push(TEST.Commande);
-  s.Uart.TX_Buffer.push(TEST.Vitesse);
-  s.Uart.TX_Buffer.push(TEST.Angle);
-  s.Uart.TX_Buffer.sendData();
-  
-  
-  
-  
-  
-  //s.uart.TX_Buffer.push(TEST.Vitesse);
-  //s.uart.TX_Buffer.push(TEST.Angle);
-  //s.uart.TX_Buffer.Print("CACA");
-  //s.uart.TX_Buffer.push(0xFF);
+	// TEST THE CIRCULAR BUFFER  
+  //_delay_ms(2000);
   //
-  //
-  //s.uart.TX_Buffer.sendData();
-  //
+  //trame TEST;
+  //TEST = s.Uart.RX_Buffer.pull(); 
+  //s.Uart.TX_Buffer.push(TEST.Commande);
+  //s.Uart.TX_Buffer.push(TEST.Vitesse);
+  //s.Uart.TX_Buffer.push(TEST.Angle);
+  //s.Uart.TX_Buffer.sendData();
+
   //s.uart.LoopBackOn = true;
   
+  trame TEST;
+  TEST = s.Uart.RX_Buffer.pull();
   
+  s.Moteur.CalculPWM(TEST.Vitesse, TEST.Angle, 0, 0);  
 }		
