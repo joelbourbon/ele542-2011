@@ -16,19 +16,22 @@
 #include <avr/io.h>
 #include <stdint.h>
 
+extern "C" void __vector_10(); // ISR(TIMER0_COMP_vect)
+
 class timer0
 {
 private:
-  
-
+  friend void __vector_10();
+  void interupt_conversion();
 
 public:
-  timer0();
-  void interupt_conversion();
+  timer0();  
   
   uint16_t mTop_Value;
   volatile uint32_t time_us;
   volatile uint32_t time_ms; 
+  
+  uint32_t get_us_time();
   
 };
 

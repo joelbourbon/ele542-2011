@@ -16,8 +16,10 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "core/UART/uart.h"
+#include "core/Timer/timer0.h"
 #include "core/Timer/timer1.h"
 #include "core/Controle/moteur.h"
+#include "core/datastore.h"
 //#include "core/PIN/pin.h"
 
 class CoreInit
@@ -28,8 +30,10 @@ public:
 
 public:	
 	uart Uart;
+	timer0 Timer0;
 	timer1 Timer1;
 	moteur Moteur;
+	datastore DataStore;
 	
 	//pin DIR_G1;
 	//pin DIR_G2;

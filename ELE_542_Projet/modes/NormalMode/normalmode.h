@@ -16,6 +16,10 @@
 
 class NormalMode 
 {
+private:
+  uint8_t mActiveTask;
+  void processTasks();
+	
 public:
 	void init();
 	void loop();
