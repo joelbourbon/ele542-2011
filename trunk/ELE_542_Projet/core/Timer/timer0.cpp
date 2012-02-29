@@ -19,9 +19,9 @@ timer0::timer0()
 	// Complete configuration of the timer0
 	// Note : This is too much but education oriented
 	//
-		mTop_Value = 9999;
-		time_us=0;
-    time_ms=0;
+	mTop_Value = 9999;
+	time_us=0;
+  time_ms=0;
 		
 	TCCR0 = (1 << FOC0)  // Force on compare
 	      | (1 << WGM01)   // 
@@ -38,21 +38,22 @@ timer0::timer0()
 	ICR1L  = mTop_Value & 0x00FF;  // TOP value to 9999
 	
 	TIMSK |= (0 << TOIE0)
-	      | (1 << OCIE0);
-		  
-
-
-	   
-}
-void timer0:: interupt_conversion(){
-	if(time_us > 39) {
-		time_ms+=1;
-		time_us -= 40;
-	} else
-	time_us += 25;
-	
+	      | (1 << OCIE0);	   
 }
 
-/*ISR(TIMER0_COMP_vect){
-	interupt_conversion();
-}*/
+uint32_t timer0::get_us_time()
+{
+	cli();
+	uint32_t us = time_ms * 1000 + time_us;
+  return us;
+}	
+
+ISR(TIMER0_COMP_vect){
+	if(s.Timer0.time_us > 999)
+	{
+		s.Timer0.time_ms+=1;
+		s.Timer0.time_us -= 1000;
+	} 
+	else
+	  s.Timer0.time_us += 25;
+}

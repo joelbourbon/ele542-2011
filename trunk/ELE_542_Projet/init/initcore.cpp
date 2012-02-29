@@ -14,8 +14,10 @@
 
 CoreInit::CoreInit() :
     Uart()
+	, Timer0()
 	, Timer1()
 	, Moteur()
+	, DataStore()
 	//, DIR_G1(PORTD, DDRD, PIND, PIND2, PinOutput)
 	//, DIR_G2(PORTD, DDRD, PIND, PIND3, PinOutput)
 	//, DIR_D1(PORTD, DDRD, PIND, PIND6, PinOutput)
