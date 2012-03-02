@@ -37,13 +37,19 @@ void Buffer_Envoi::sendData()
 	UDR = pull();
 }
 
-void Buffer_Envoi::Print(const char* iString)
+void Buffer_Envoi::Print(const char* iString, uint8_t inDEBUG = 0)
 {
   cli();
-  push(0xFE);
+  
+  if(1 == inDEBUG)
+    push(0xFE);
+	
 	while(*iString != 0)
 		push(*iString++);
-  push(0xFF);
+		
+  if(1 == inDEBUG)
+    push(0xFF);
+	
   sei();
   sendData();
 }	

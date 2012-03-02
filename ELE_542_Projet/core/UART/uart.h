@@ -39,6 +39,8 @@ public:
   
   // Transmit byte
   void uart_loopback(uint8_t iByte);
+  void printDebug(const char* iString);
+  void printString(const char* iString);
 
 };
 
