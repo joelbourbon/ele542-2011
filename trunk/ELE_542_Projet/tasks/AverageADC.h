@@ -10,6 +10,7 @@
 #define AVERAGEADC_H_
 
 #include "singleton.h"  
+#include "stdio.h"
 
 int32_t period_in_us;
 uint32_t last_process_time_us;

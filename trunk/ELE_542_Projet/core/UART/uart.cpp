@@ -51,6 +51,16 @@ void uart::uart_loopback(uint8_t iByte)
 	  UDR = iByte;            // Loop back directly to UDR to TX
 }
 
+void uart::printString(const char* iString)
+{
+	s.Uart.TX_Buffer.Print(iString, 0);
+}
+
+void uart::printDebug(const char* iString)
+{
+  s.Uart.TX_Buffer.Print(iString, 1);
+}		
+
 ISR(USART_RXC_vect)
 {
 	s.Uart.wReceivedByte = UDR;

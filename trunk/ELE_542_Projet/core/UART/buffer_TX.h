@@ -27,7 +27,7 @@ private:
   uint8_t ecriture;  
   
 public:
-  void Print(const char* iString);
+  void Print(const char* iString, uint8_t inDEBUG);
   char pull();
   void push(char iByte);
   void sendData();

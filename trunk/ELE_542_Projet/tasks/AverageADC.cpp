@@ -23,4 +23,10 @@ void averageADC()
 {
 	s.DataStore.MoyenneADCDroit   = 0;
 	s.DataStore.MoyenneADCGauche  = 0;
+	
+	// TEST DE TASKER
+	char mBuffer[20];
+	char* mSender = &mBuffer[0];
+	sprintf(mBuffer, "TEST : %i", last_process_time_us);
+	s.Uart.printString(mBuffer);
 }	

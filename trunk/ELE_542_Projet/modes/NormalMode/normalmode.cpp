@@ -45,6 +45,5 @@ void NormalMode::processTasks()
 {
 	if(1 == mActiveTask)
 	{
-		
 	}		
 }
