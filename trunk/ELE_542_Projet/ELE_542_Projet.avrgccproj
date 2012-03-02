@@ -100,6 +100,12 @@
     <Compile Include="Config_ATmega32.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="core\ADC\adc.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="core\ADC\adc.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="core\Controle\moteur.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -179,6 +185,7 @@
   <ItemGroup>
     <Folder Include="core\" />
     <Folder Include="core\" />
+    <Folder Include="core\ADC\" />
     <Folder Include="core\Controle" />
     <Folder Include="core\PIN" />
     <Folder Include="core\Timer" />
