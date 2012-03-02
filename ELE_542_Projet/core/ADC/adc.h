@@ -1,5 +1,5 @@
 //************************************************************************/
-/*  Title       : adc.h                                          */
+/*  Title       : adc.h                                                 */
 /*                                                                      */
 /*  Class       : ELE-542                                               */  
 /*                                                                      */
@@ -16,16 +16,29 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "singleton.h"
-class adc{
-	private:
-	//friend void __vector_16();
+
+extern "C" void __vector_16();
+
+#define MUXMASK 0b00011111
+
+union adc_register{
 	
-	public:
+	uint16_t adc_value;
+	uint8_t adc[2];
+	
+};
+
+class adc{
+private:
+	friend void __vector_16();
+	
+public:
 	adc();
-	volatile uint16_t sum_motorA;
-	volatile uint8_t nb_measureA;
-	volatile uint16_t sum_motorB;
-	volatile uint8_t nb_measureB;
+	volatile uint16_t sum_motor_left;
+	volatile uint8_t nb_measure_left;
+	volatile uint16_t sum_motor_right;
+	volatile uint8_t nb_measure_right;
+	volatile adc_register adc1;
+	volatile uint8_t first;
 };
 #endif /* ADC_H_ */
