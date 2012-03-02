@@ -18,6 +18,7 @@
 #include "core/UART/uart.h"
 #include "core/Timer/timer0.h"
 #include "core/Timer/timer1.h"
+#include "core/ADC/adc.h"
 #include "core/Controle/moteur.h"
 #include "core/datastore.h"
 //#include "core/PIN/pin.h"
@@ -34,6 +35,7 @@ public:
 	timer1 Timer1;
 	moteur Moteur;
 	datastore DataStore;
+	adc ADC1;
 	
 	//pin DIR_G1;
 	//pin DIR_G2;
