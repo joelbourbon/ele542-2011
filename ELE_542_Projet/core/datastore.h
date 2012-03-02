@@ -11,8 +11,8 @@
 
 typedef struct  
 {
-	uint32_t MoyenneADCDroit;
-	uint32_t MoyenneADCGauche;	
+	float MoyenneADCDroit;
+	float MoyenneADCGauche;	
 }datastore;
 
 
