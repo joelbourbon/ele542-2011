@@ -21,8 +21,8 @@ void processAverageADC()
 
 void averageADC()
 {
-	s.DataStore.MoyenneADCDroit   = 0;
-	s.DataStore.MoyenneADCGauche  = 0;
+	s.DataStore.MoyenneADCDroit   = (float)s.ADC1.sum_motor_right / (float)s.ADC1.sum_motor_right;
+	s.DataStore.MoyenneADCGauche  = (float)s.ADC1.sum_motor_left / (float)s.ADC1.sum_motor_left;
 	
 	// TEST DE TASKER
 	char mBuffer[20];
