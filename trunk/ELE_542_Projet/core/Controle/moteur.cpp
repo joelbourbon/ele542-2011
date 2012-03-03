@@ -1,8 +1,11 @@
 #include "moteur.h"
 
-
 moteur::moteur():
-  Timer1()
+    Timer1()
+  , PIN_G1(&PORTD, &DDRD, &PIND, PIND2, PinOutput)
+	, PIN_G2(&PORTD, &DDRD, &PIND, PIND3, PinOutput)
+	, PIN_D1(&PORTD, &DDRD, &PIND, PIND6, PinOutput)
+	, PIN_D2(&PORTD, &DDRD, &PIND, PIND7, PinOutput)
   {
 	  
   }
@@ -58,21 +61,59 @@ void moteur::CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd)
 	
 	//MOTEUR DROIT
 	if(Duty_D > 0)
-	  DDRD = (1 << DIR_D1) | (0 << DIR_D2);
+	  ChangeMotorAction(MoteurDroit, MarcheAvant);
 	else if(Duty_D < 0)
-	  DDRD = (0 << DIR_D1) | (1 << DIR_D2);
+	  ChangeMotorAction(MoteurDroit, MarcheArriere);
 	else
-	  DDRD = (0 << DIR_D1) | (0 << DIR_D2);
+	  ChangeMotorAction(MoteurDroit, Neutre);
 	  
-	//MOTEUR DROIT
+	//MOTEUR GAUCHE
 	if(Duty_G > 0)
-	  DDRD = (1 << DIR_G1) | (0 << DIR_G2);
+	  ChangeMotorAction(MoteurGauche, MarcheAvant);
 	else if(Duty_D < 0)
-	  DDRD = (0 << DIR_G1) | (1 << DIR_G2);
+	  ChangeMotorAction(MoteurGauche, MarcheArriere);
 	else
-	  DDRD = (0 << DIR_G1) | (0 << DIR_G2);
+	  ChangeMotorAction(MoteurGauche, Neutre);
+	  
+	// Absolute value of the duties
+	Duty_D = (Duty_D < 0.0) ? -Duty_D : Duty_D;
+	Duty_G = (Duty_G < 0.0) ? -Duty_G : Duty_G;
 	
+	// Change the duty cycle of the PWM for each motor
 	Timer1.setCompareValueRight(Duty_D * (float)Timer1.mTop_Value);
-	Timer1.setCompareValueLeft(Duty_G  * (float)Timer1.mTop_Value);
+	Timer1.setCompareValueLeft( Duty_G * (float)Timer1.mTop_Value);
+}
+
+void moteur::ChangeMotorAction(Moteurs iMoteur, ActionMoteur iAction)
+{
+	pin* PinMoteur1 = &PIN_G1;
+	pin* PinMoteur2 = &PIN_G2;
+	
+	if(iMoteur == MoteurDroit)
+	{
+		PinMoteur1 = &PIN_D1;
+		PinMoteur2 = &PIN_D2;
+	}	  
+	
+	if (iAction == Neutre)
+	{
+		PinMoteur1->clearPIN();
+		PinMoteur2->clearPIN();
+	}
+	else if (iAction == MarcheAvant)
+	{
+		PinMoteur1->setPIN();
+		PinMoteur2->clearPIN();
+	}
+	else if (iAction == MarcheArriere)
+	{
+		PinMoteur1->clearPIN();
+		PinMoteur2->setPIN();
+	}
+	else
+	{
+		PinMoteur1->setPIN();
+		PinMoteur2->setPIN();
+	}
 }
 

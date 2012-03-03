@@ -18,22 +18,22 @@ typedef enum
 class pin
 {
 private:
-  uint8_t      *PORTX;
-  uint8_t      *DDRX;
-  uint8_t      *PINX;
+  volatile uint8_t      *PINX;
+  volatile uint8_t      *PORTX;
+  volatile uint8_t      *DDRX;
   uint8_t       PINNumber;
   PINDirection  Direction;
 	
 public:
-  pin(uint8_t *iPORTX, uint8_t *iDDRX, uint8_t *iPINX, uint8_t iPinNumber, PINDirection iPinDirection);
+  pin(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, volatile uint8_t *iPINX, uint8_t iPinNumber, PINDirection iPinDirection);
+  pin(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, uint8_t iPinNumber, PINDirection iPinDirection);
+  pin();
 	
 	// Output Methods
+	void toggle();
 	void setPIN();
 	void clearPIN();
-	void toggle();
-	
-	// Input Methods
-	
+
 };
 
 #endif //__PIN_H_
