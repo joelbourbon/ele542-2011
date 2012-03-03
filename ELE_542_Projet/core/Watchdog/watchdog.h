@@ -1,24 +1,26 @@
-/************************************************************************/
-/*  Title       : initcore.cpp                                          */
+//************************************************************************/
+/*  Title       : watchdog.h                                             */
 /*                                                                      */
 /*  Class       : ELE-542                                               */  
 /*                                                                      */
 /*  Written by  : Joel Bourbonnais & Olivier Massé                      */
 /*	                                                                    */
-/*  Summary     : Inits all the core systems used in modes              */
+/*  Summary     : Include file for the normal mode                      */
 /*                                                                      */
 /************************************************************************/
 
 
-#include "initcore.h"
+#ifndef watchdog_H_
+#define watchdog_H_
 
-CoreInit::CoreInit() :
-    Uart()
-	, Timer0()
-	, Timer1()
-	, Moteur()
-	, DataStore()
-	, ADC1()
-	, Watchdog()
-{
-}	  
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+class watchdog{
+private:
+	
+public:
+	watchdog();
+	void reset();
+};
+#endif /* watchdog_H_ */

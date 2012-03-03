@@ -11,6 +11,7 @@
 
 
 #include "buffer_RX.h"
+#include "singleton.h"
 
 Buffer_Reception::Buffer_Reception():
 	debut_derniere(100),
@@ -32,6 +33,7 @@ void Buffer_Reception::push(uint8_t iByte)
 	{
 		compte_donnees = 0;
 		debut_derniere = pointeur_ecriture - 2;
+		s.Watchdog.reset();
 	}
 	else
 	  ++compte_donnees;

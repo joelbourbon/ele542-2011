@@ -21,7 +21,8 @@
 #include "core/ADC/adc.h"
 #include "core/Controle/moteur.h"
 #include "core/datastore.h"
-//#include "core/PIN/pin.h"
+#include "core/watchdog/watchdog.h"
+#include "core/LED/led.h"
 
 class CoreInit
 {
@@ -36,12 +37,7 @@ public:
 	moteur Moteur;
 	datastore DataStore;
 	adc ADC1;
-	
-	//pin DIR_G1;
-	//pin DIR_G2;
-	//pin DIR_D1;
-	//pin DIR_D2;
-		
+	watchdog Watchdog;		
 };
 
 #endif /* INITCORE_H_ */
