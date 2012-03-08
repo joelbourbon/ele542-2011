@@ -49,3 +49,9 @@ void pin::toggle()
 {		   
 	*PORTX ^= (1 << PINNumber);
 }
+
+PinState pin::getState()
+{
+  return (*PINX & (1 << PINNumber)) > 0 ? High : Low ;
+}
+

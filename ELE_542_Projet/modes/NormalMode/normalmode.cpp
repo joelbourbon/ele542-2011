@@ -17,6 +17,8 @@
 void NormalMode::init()
 {
 	mActiveTask= 1;
+  
+  
   //s.Uart.TX_Buffer.push(0xFE);
   //s.Uart.LoopBackOn = false;
 }

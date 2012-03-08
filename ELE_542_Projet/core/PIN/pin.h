@@ -15,6 +15,12 @@ typedef enum
 	PinOutput  = 1
 }PINDirection;
 
+typedef enum
+{
+	Low   = 0,
+	High  = 1
+}PinState;
+
 class pin
 {
 private:
@@ -33,7 +39,10 @@ public:
 	void toggle();
 	void setPIN();
 	void clearPIN();
-
+	
+	// Inputs Methods
+  PinState getState();
+  
 };
 
 #endif //__PIN_H_
