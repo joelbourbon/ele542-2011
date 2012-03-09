@@ -20,5 +20,7 @@ CoreInit::CoreInit() :
 	, DataStore()
 	, ADC1()
 	, Watchdog()
+	, StartButton(&PORTA, &DDRA, &PINA, PINA6, PinInput)
+	, StopButton(&PORTA, &DDRA, &PINA, PINA7, PinInput)
 {
 }	  

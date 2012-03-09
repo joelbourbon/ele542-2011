@@ -10,6 +10,7 @@
 /************************************************************************/
 
 #include <singleton.h>
+#include <avr/wdt.h>
 #include "watchdog.h"
 
 
@@ -23,5 +24,5 @@ watchdog::watchdog()
 
 void watchdog::reset()
 {
-	WDTCR = (0<<WDE); //Watchdog Disabled and counter will be reset next time it'll be enable
+	wdt_reset();
 }

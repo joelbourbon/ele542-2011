@@ -12,7 +12,7 @@
 #ifndef NORMALMODE_H_
 #define NORMALMODE_H_
 
-#include "singleton.h"
+#include <stdint.h>
 
 class NormalMode 
 {

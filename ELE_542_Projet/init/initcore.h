@@ -22,7 +22,9 @@
 #include "core/Controle/moteur.h"
 #include "core/datastore.h"
 #include "core/watchdog/watchdog.h"
+#include "core/PIN/pin.h"
 #include "core/LED/led.h"
+//#include "tasks/AverageADC.h"
 
 class CoreInit
 {
@@ -37,7 +39,10 @@ public:
 	moteur Moteur;
 	datastore DataStore;
 	adc ADC1;
-	watchdog Watchdog;		
+	watchdog Watchdog;
+	
+	pin StartButton;
+	pin StopButton;
 };
 
 #endif /* INITCORE_H_ */

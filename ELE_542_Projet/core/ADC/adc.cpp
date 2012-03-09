@@ -14,7 +14,8 @@
 
 
 adc::adc():
-  first(1)
+    first(1)
+  , ADC_period_in_ms(1000)
 {
 	
 	ADMUX = (0 << REFS1)      // 
@@ -49,6 +50,8 @@ ISR(ADC_vect){
 	  s.ADC1.adc1.adc[0]=ADCL;
 	  s.ADC1.adc1.adc[1]=ADCH;
 	  
+	 
+	  
     if((ADMUX & MUXMASK) == 0){
       ADMUX&=~(1<<0);  
 	    s.ADC1.sum_motor_left+=s.ADC1.adc1.adc_value;
@@ -61,4 +64,28 @@ ISR(ADC_vect){
       s.ADC1.nb_measure_right++;
     }
   }
+}
+
+void adc::processAverageADC()
+{
+	uint32_t current_time_ms = s.Timer0.get_ms_time();
+
+	if ((int32_t(current_time_ms) - int32_t(ADC_last_process_time_ms)) < ADC_period_in_ms)
+		return;
+
+	ADC_last_process_time_ms += (ADC_period_in_ms);
+	
+	// TEST DE TASKER
+	char mBuffer[20];
+	sprintf(mBuffer, "%u\r\n", /*ADC_last_process_time_us - */s.Timer0.time_ms);
+	s.Uart.printString(mBuffer);
+
+	//averageADC();
+}
+
+void adc::averageADC(){
+	
+	s.DataStore.MoyenneADCDroit   = (float)s.ADC1.sum_motor_right / (float)s.ADC1.sum_motor_right;
+	s.DataStore.MoyenneADCGauche  = (float)s.ADC1.sum_motor_left / (float)s.ADC1.sum_motor_left;
+	
 }

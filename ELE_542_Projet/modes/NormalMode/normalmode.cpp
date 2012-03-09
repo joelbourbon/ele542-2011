@@ -10,14 +10,14 @@
 /************************************************************************/
 
 #include "normalmode.h"
-//#include <util/delay.h>
+#include "singleton.h"
 
 #define F_CPU 16000000
 
 void NormalMode::init()
 {
 	mActiveTask= 1;
-  
+  s.Uart.printString("UART IS WORKING\r\n");
   
   //s.Uart.TX_Buffer.push(0xFE);
   //s.Uart.LoopBackOn = false;
@@ -37,15 +37,23 @@ void NormalMode::loop()
 
   //s.uart.LoopBackOn = true;
   
-  trame TEST;
-  TEST = s.Uart.RX_Buffer.pull();
+  s.Watchdog.reset();
   
-  s.Moteur.CalculPWM(TEST.Vitesse, TEST.Angle, 0, 0);  
+  s.Timer1.setCompareValueLeft(512);
+  s.Timer1.setCompareValueRight(512);
+  
+  processTasks();
+  
+  //trame TEST;
+  //TEST = s.Uart.RX_Buffer.pull();
+  //
+  //s.Moteur.CalculPWM(TEST.Vitesse, TEST.Angle, 0, 0);  
 }
 
 void NormalMode::processTasks()
 {
 	if(1 == mActiveTask)
 	{
+		s.ADC1.processAverageADC();
 	}		
 }

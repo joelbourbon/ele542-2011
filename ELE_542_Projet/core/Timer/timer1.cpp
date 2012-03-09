@@ -43,7 +43,7 @@ timer1::timer1()
 	ICR1H  = mTop_Value >> 7;
 	ICR1L  = mTop_Value & 0x00FF;  // TOP value to 9999
 	
-	TIMSK = (0 << TICIE1)
+	TIMSK |= (0 << TICIE1)
 	      | (0 << OCIE1A)
 	      | (0 << OCIE1A)
 	      | (0 << TOIE1); // All interrupts OFF
