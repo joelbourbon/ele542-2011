@@ -37,7 +37,7 @@ void leddriver::refreshLEDsState()
 	for (int i = 3; i < 7; i++)
 	{
 		led* wLed= LedList[i];
-		uint32_t wActualTime = s.Timer0.get_us_time();
+		uint32_t wActualTime = s.Timer0.get_ms_time();
 
 		if (wLed->Active == 1 && wLed->NextEventTime < wActualTime)
 		{

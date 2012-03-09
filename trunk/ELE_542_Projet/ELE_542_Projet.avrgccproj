@@ -185,12 +185,6 @@
     <Compile Include="singleton.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="tasks\AverageADC.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="tasks\AverageADC.h">
-      <SubType>compile</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="core\UART\uart.cpp">
@@ -216,7 +210,6 @@
     <Folder Include="modes\NormalMode" />
     <Folder Include="init" />
     <Folder Include="driver" />
-    <Folder Include="tasks" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC.targets" />
 </Project>

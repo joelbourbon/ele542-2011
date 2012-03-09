@@ -1,3 +1,5 @@
+
+
 #include "pin.h"
 
 
@@ -14,6 +16,8 @@ pin::pin(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, volatile uint8_t *iP
 		
 	if(iPinDirection == PinOutput)
 	  *PORTX &= ~(1 << PINNumber);
+	else
+	  *PORTX |=  (1 << PINNumber);
 }
 
 pin::pin(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, uint8_t iPinNumber, PINDirection iPinDirection)

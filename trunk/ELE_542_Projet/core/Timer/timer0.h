@@ -27,11 +27,11 @@ private:
 public:
   timer0();  
   
-  uint16_t mTop_Value;
+  volatile uint16_t mTop_Value;
   volatile uint32_t time_us;
-  volatile uint32_t time_ms; 
+  volatile uint64_t time_ms; 
   
-  uint32_t get_us_time();
+  uint64_t get_ms_time();
   
 };
 

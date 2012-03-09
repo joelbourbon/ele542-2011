@@ -37,7 +37,7 @@ void led::activateLED()
 	ON();
 	
 	if(Type == Instance)
-		NextEventTime = s.Timer0.get_us_time() + (INSTANCEDELAY * 1000);
+		NextEventTime = s.Timer0.get_ms_time() + (INSTANCEDELAY * 1000);
 }
 
 void led::deactivateLED()
