@@ -31,17 +31,18 @@ union adc_register{
 class adc{
 private:
 	friend void __vector_16();
-	int32_t  ADC_period_in_ms;
-  uint32_t ADC_last_process_time_ms;
+	int64_t  ADC_period_in_ms;
+  uint64_t ADC_last_process_time_ms;
   void averageADC();
 	
 public:
 	adc();
   void processAverageADC();
-	volatile uint16_t sum_motor_left;
-	volatile uint8_t nb_measure_left;
-	volatile uint16_t sum_motor_right;
-	volatile uint8_t nb_measure_right;
+  
+	uint16_t sum_motor_left;
+	uint8_t nb_measure_left;
+	uint16_t sum_motor_right;
+	uint8_t nb_measure_right;
 	volatile adc_register adc1;
 	volatile uint8_t first;
 

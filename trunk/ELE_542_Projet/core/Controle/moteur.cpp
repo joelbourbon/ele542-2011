@@ -6,8 +6,7 @@ moteur::moteur():
 	, PIN_G2(&PORTD, &DDRD, &PIND, PIND3, PinOutput)
 	, PIN_D1(&PORTD, &DDRD, &PIND, PIND6, PinOutput)
 	, PIN_D2(&PORTD, &DDRD, &PIND, PIND7, PinOutput)
-  {
-	  
+  {	  
   }
 
 void moteur::CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd)

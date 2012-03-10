@@ -29,7 +29,7 @@ timer0::timer0():
 	      | (0 << COM00)   // Disconnected output compare
 	      | (0 << CS00)    // 
 	      | (1 << CS01)    // 
-	      | (0 << CS02);   // Prescaler to 1
+	      | (0 << CS02);   // Prescaler to 8
 
 	OCR0 = 50;
 	

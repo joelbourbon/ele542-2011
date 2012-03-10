@@ -16,7 +16,7 @@
 
 void NormalMode::init()
 {
-	mActiveTask= 1;
+	mActiveTask = 0;
   s.Uart.printString("UART IS WORKING\r\n");
   
   //s.Uart.TX_Buffer.push(0xFE);
@@ -39,8 +39,8 @@ void NormalMode::loop()
   
   s.Watchdog.reset();
   
-  s.Timer1.setCompareValueLeft(512);
-  s.Timer1.setCompareValueRight(512);
+  //s.Timer1.setCompareValueLeft(5000);
+  //s.Timer1.setCompareValueRight(5000);
   
   processTasks();
   
