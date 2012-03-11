@@ -22,5 +22,6 @@ CoreInit::CoreInit() :
 	, Watchdog()
 	, StartButton(&PORTA, &DDRA, &PINA, PINA6, PinInput)
 	, StopButton(&PORTA, &DDRA, &PINA, PINA7, PinInput)
+	, ledTest(&PORTB, &DDRB, PINB0, Solid)
 {
 }	  
