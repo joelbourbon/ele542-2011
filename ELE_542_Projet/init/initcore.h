@@ -43,6 +43,8 @@ public:
 	
 	pin StartButton;
 	pin StopButton;
+	
+	led ledTest;
 };
 
 #endif /* INITCORE_H_ */

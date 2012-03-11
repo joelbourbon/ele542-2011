@@ -39,6 +39,10 @@ void NormalMode::loop()
   
   s.Watchdog.reset();
   
+  
+  s.Moteur.ChangeMotorAction(MoteurDroit,  MarcheAvant);
+  s.Moteur.ChangeMotorAction(MoteurGauche, MarcheAvant);
+  
   //s.Timer1.setCompareValueLeft(5000);
   //s.Timer1.setCompareValueRight(5000);
   
