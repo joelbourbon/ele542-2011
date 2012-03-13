@@ -14,8 +14,8 @@
 
 
 adc::adc():
-    first(1)
-  , ADC_period_in_ms(1000)
+    ADC_period_in_ms(1000)
+	, first(1)
 {
 	
 	ADMUX = (0 << REFS1)      // 

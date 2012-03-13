@@ -33,7 +33,7 @@ public:
 	void deactivateLED();
 	
 	LedType  Type;
-	uint32_t NextEventTime;
+	uint64_t NextEventTime;
 	uint8_t  Active;
 	
 };

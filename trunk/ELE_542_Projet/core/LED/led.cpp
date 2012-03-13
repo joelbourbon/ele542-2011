@@ -16,6 +16,7 @@ led::led(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, uint8_t iPinNumber, 
   , Type(iType)
   , Active(0)
 {
+	OFF();
 }
 
 led::led() : pin()
@@ -37,7 +38,7 @@ void led::activateLED()
 	ON();
 	
 	if(Type == Instance)
-		NextEventTime = s.Timer1.time_ms + (INSTANCEDELAY * 1000);
+		NextEventTime = s.Timer1.time_ms + (INSTANCEDELAY);
 }
 
 void led::deactivateLED()
