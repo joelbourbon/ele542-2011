@@ -11,13 +11,12 @@ pin::pin(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, volatile uint8_t *iP
   PINNumber = iPinNumber;
   Direction = iPinDirection;
   
+  // Set direction of the PIN
   *DDRX = (*DDRX & ~(1 << PINNumber))    // Ensure a 0 in the pin position
         | (iPinDirection << PINNumber);  // Put the good value to set direction
 		
-	// Output --> Set (1)         Input --> Clear (0)
+	// Clear the pin by default if in Output Mode
 	if(iPinDirection == PinOutput)
-	  *PORTX |=  (1 << PINNumber);
-	else
 	  *PORTX &= ~(1 << PINNumber);
 }
 
@@ -28,9 +27,11 @@ pin::pin(volatile uint8_t *iPORTX, volatile uint8_t *iDDRX, uint8_t iPinNumber, 
   PINNumber = iPinNumber;
   Direction = iPinDirection;
   
+  // Set direction of the PIN
   *DDRX = (*DDRX & ~(1 << PINNumber))    // Ensure a 0 in the pin position
         | (iPinDirection << PINNumber);  // Put the good value to set direction
 		
+	// Clear the pin by default if in Output Mode
 	if(iPinDirection == PinOutput)
 	  *PORTX &= ~(1 << PINNumber);
 }

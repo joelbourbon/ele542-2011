@@ -30,10 +30,7 @@ public:
   
   volatile uint64_t time_ms; 
   
-  uint16_t mTop_Value;
-  
-  uint64_t get_ms_time();
-  
+  uint16_t mTop_Value;  
 };
 
 #endif /* TIMER1_H_ */

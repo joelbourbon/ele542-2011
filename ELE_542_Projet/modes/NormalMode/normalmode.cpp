@@ -18,6 +18,7 @@ void NormalMode::init()
 {
 	mActiveTask = 1;
   s.Uart.printString("UART IS WORKING\r\n");
+  s.LedDriver.Led1.activateLED();
   
   //s.Uart.TX_Buffer.push(0xFE);
   //s.Uart.LoopBackOn = false;
@@ -37,8 +38,7 @@ void NormalMode::loop()
 
   //s.uart.LoopBackOn = true;
   
-  s.Watchdog.reset();
-  
+  s.Watchdog.reset(); 
   
   s.Moteur.ChangeMotorAction(MoteurDroit,  MarcheAvant);
   s.Moteur.ChangeMotorAction(MoteurGauche, MarcheAvant);
@@ -59,5 +59,6 @@ void NormalMode::processTasks()
 	if(1 == mActiveTask)
 	{
 		s.ADC1.processAverageADC();
+		s.LedDriver.refreshLEDsState();
 	}		
 }

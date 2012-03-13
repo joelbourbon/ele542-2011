@@ -13,11 +13,17 @@
 #include "core/LED/led.h"
 
 #define FLASHINGDELAY 200
+#define PROCESS_DELAY 50
 
 class leddriver
 {
 private:
-	led* LedList[8];
+	led* LedList[4];
+	
+public:
+  leddriver();
+	void refreshLEDsState();
+	
 	led Led1;
 	led Led2;
 	led Led3;
@@ -27,9 +33,7 @@ private:
 	led Led7;
 	led Led8;
 	
-public:
-  leddriver();
-	void refreshLEDsState();
+	uint64_t mNextEventTime;
 };
 
 #endif /* LEDDRIVER_H_ */
