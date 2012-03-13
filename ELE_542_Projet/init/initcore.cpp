@@ -14,7 +14,7 @@
 
 CoreInit::CoreInit() :
     Uart()
-	, Timer0()
+	//, Timer0()
 	, Timer1()
 	, Moteur()
 	, DataStore()

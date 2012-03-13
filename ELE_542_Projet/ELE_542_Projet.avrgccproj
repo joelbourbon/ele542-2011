@@ -127,12 +127,6 @@
     <Compile Include="core\PIN\pin.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="core\Timer\timer0.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="core\Timer\timer0.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="core\Timer\timer1.cpp">
       <SubType>compile</SubType>
     </Compile>

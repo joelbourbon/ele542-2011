@@ -69,7 +69,7 @@ ISR(ADC_vect){
 
 void adc::processAverageADC()
 {
-	uint64_t current_time_ms = s.Timer0.get_ms_time();
+	uint64_t current_time_ms = s.Timer1.time_ms;
 
 	if ((int64_t(current_time_ms) - int64_t(ADC_last_process_time_ms)) < ADC_period_in_ms)
 		return;
@@ -78,7 +78,7 @@ void adc::processAverageADC()
 	
 	// TEST DE TASKER
 	char mBuffer[20];
-	sprintf(mBuffer, "%u\r\n", s.Timer0.time_ms); // Les erreurs apparaissant sur le UART sont du au sprintf limité à 32 bits
+	sprintf(mBuffer, "%u\r\n", s.Timer1.time_ms); // Les erreurs apparaissant sur le UART sont du au sprintf limité à 32 bits
 	s.Uart.printString(mBuffer);
 
 	//averageADC();
