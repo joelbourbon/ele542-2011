@@ -34,7 +34,7 @@ public:
 
 public:	
 	uart Uart;
-	timer0 Timer0;
+	//timer0 Timer0;
 	timer1 Timer1;
 	moteur Moteur;
 	datastore DataStore;

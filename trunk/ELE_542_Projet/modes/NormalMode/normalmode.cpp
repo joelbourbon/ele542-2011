@@ -16,7 +16,7 @@
 
 void NormalMode::init()
 {
-	mActiveTask = 0;
+	mActiveTask = 1;
   s.Uart.printString("UART IS WORKING\r\n");
   
   //s.Uart.TX_Buffer.push(0xFE);
