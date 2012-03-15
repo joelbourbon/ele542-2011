@@ -1,10 +1,13 @@
-/*
- * leddriver.h
- *
- * Created: 2012-03-03 12:56:57
- *  Author: Olivier
- */ 
-
+/************************************************************************/
+/*  Title       : leddriver.h                                           */
+/*                                                                      */
+/*  Class       : ELE-542                                               */  
+/*                                                                      */
+/*  Written by  : Joel Bourbonnais & Olivier Massé                      */
+/*	                                                                    */
+/*  Summary     : Include file for the leddriver                        */
+/*                                                                      */
+/************************************************************************/
 
 #ifndef LEDDRIVER_H_
 #define LEDDRIVER_H_

@@ -1,9 +1,14 @@
-/**
-	@file moteur.h
-	@brief Header pour le fichier moteur.c
-	@author Bruno De Kelper et Louis-Bernard Lagueux
-	@date 13 Octobre 2006
-*/
+/************************************************************************/
+/*  Title       : moteur.h                                              */
+/*                                                                      */
+/*  Class       : ELE-542                                               */  
+/*                                                                      */
+/*  Written by  : Joel Bourbonnais & Olivier Massé                      */
+/*	                                                                    */
+/*  Summary     : Include file for the moteur                           */
+/*                                                                      */
+/************************************************************************/
+
 #ifndef __MOTOR_H_
 #define __MOTOR_H_
 
@@ -53,7 +58,7 @@ private:
 	
 public:
   moteur();
-	void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd);
+	void CalculPWM(uint8_t iVitesse_D, uint8_t iAngle_D, float Vg, float Vd);
 	void ChangeMotorAction(Moteurs iMoteur, ActionMoteur iAction);	
 };
 

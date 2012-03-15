@@ -19,7 +19,6 @@
 #include "core/Timer/timer1.h"
 #include "core/ADC/adc.h"
 #include "core/Controle/moteur.h"
-#include "core/datastore.h"
 #include "core/watchdog/watchdog.h"
 #include "core/PIN/pin.h"
 #include "driver/LedDriver/leddriver.h"
@@ -34,7 +33,6 @@ public:
 	uart Uart;
 	timer1 Timer1;
 	moteur Moteur;
-	datastore DataStore;
 	adc ADC1;
 	watchdog Watchdog;
 	

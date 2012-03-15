@@ -22,6 +22,9 @@ Buffer_Reception::Buffer_Reception():
 	
 }
 
+//
+//  Push a byte in the buffer
+//
 void Buffer_Reception::push(uint8_t iByte)
 {
 	if(iByte >= 0xF0 && compte_donnees !=0)
@@ -44,6 +47,9 @@ void Buffer_Reception::push(uint8_t iByte)
 	  ++pointeur_ecriture;
 }	
 
+//
+//  Pull the last working trame from the buffer
+//
 trame& Buffer_Reception::pull()
 {
 	trame derniereTrame;

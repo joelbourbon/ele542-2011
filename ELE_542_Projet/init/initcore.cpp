@@ -16,7 +16,6 @@ CoreInit::CoreInit() :
     Uart()
 	, Timer1()
 	, Moteur()
-	, DataStore()
 	, ADC1()
 	, Watchdog()
 	, StartButton(&PORTA, &DDRA, &PINA, PINA6, PinInput)

@@ -6,7 +6,7 @@
 /*  Written by  : Joel Bourbonnais & Olivier Massé                      */
 /*	                                                                    */
 /*  Summary     : Class that creates the timer for PWN to control the   */
-/*                motors of the µC                                      */
+/*                motors of the µC and to keep up a time reference      */
 /************************************************************************/
 
 
@@ -15,7 +15,7 @@
 
 timer1::timer1():
     time_ms(0)
-  , mTop_Value(9999)
+  , mTop_Value(10000)
 {
 	//
 	// Complete configuration of the timer1
@@ -35,33 +35,35 @@ timer1::timer1():
          | (1 << CS11 )   // 
          | (0 << CS10 );  // Prescaler 8		 
 	
-	DDRD |= (1 << DDD4) | (1 << DDD5); // Ensure compare output pins are set as outputs
+	DDRD  |= (1 << DDD4) | (1 << DDD5); // Ensure compare output pins are set as outputs
 	
 	TIMSK |= (1 << TOIE1);
 	
-	ICR1  = 0x270F;
+	ICR1  = mTop_Value;
 	
 	OCR1A = 0x1388;	
 	OCR1B = 0x1388;
 }
 
-// PWMB = Left motor
+//
+// Set the compare value to affect new duty for PWMB ==> Left motor
+//
 void timer1::setCompareValueLeft( uint16_t iValue )
 {
-	//OCR1BH = iValue >> 7;
-	//OCR1BL = iValue & 0x00FF;
-//
-
+	OCR1B = iValue;
 }
 
-// PWMA = Right motor
+//
+// Set the compare value to affect new duty for PWMA ==> Right motor
+//
 void timer1::setCompareValueRight( uint16_t iValue )
 {
-	//OCR1AH = iValue >> 7;
-	//OCR1AL = iValue & 0x00FF;
-//
+	OCR1A = iValue;
 }
 
+//
+// Interrupt every 5ms (200 hz) to keep up a time reference
+//
 ISR(TIMER1_OVF_vect){
 	s.Timer1.time_ms += 5;
 }

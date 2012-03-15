@@ -5,7 +5,7 @@
 /*                                                                      */
 /*  Written by  : Joel Bourbonnais & Olivier Massé                      */
 /*	                                                                    */
-/*  Summary     :        */
+/*  Summary     : Management of the LEDs                                */
 /*                                                                      */
 /************************************************************************/
 #include "led.h"
@@ -32,6 +32,9 @@ void led::OFF()
 	setPIN();
 }
 
+//
+// Activation for automatic management of led (flashing or instance)
+//
 void led::activateLED()
 {
 	Active = 1;
@@ -41,6 +44,9 @@ void led::activateLED()
 		NextEventTime = s.Timer1.time_ms + (INSTANCEDELAY);
 }
 
+//
+// Deactivation for automatic management of led (flashing or instance)
+//
 void led::deactivateLED()
 {
 	Active = 0;

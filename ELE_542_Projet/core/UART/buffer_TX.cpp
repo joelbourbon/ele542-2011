@@ -12,6 +12,9 @@
 
 #include "buffer_TX.h"
 
+//
+//  Push a byte in the buffer
+//
 void Buffer_Envoi::push(char iByte)
 {
   ++countData;
@@ -20,8 +23,11 @@ void Buffer_Envoi::push(char iByte)
   ecriture++;
   if(ecriture >= TAILLE_TX_BUFFER)
     ecriture = 0;    
-}	
+}
 
+//
+//  Pull the next byte from the buffer to send
+//
 char Buffer_Envoi::pull()
 {
   --countData;
@@ -32,11 +38,18 @@ char Buffer_Envoi::pull()
 	return data;
 }
 
+//
+//  Simplified function to send the next byte in the UART
+//
 void Buffer_Envoi::sendData()
 {
 	UDR = pull();
 }
 
+//
+//  Simplified function to send a string in the UART async
+//  Once started, it's interrupt managed
+//
 void Buffer_Envoi::Print(const char* iString, uint8_t inDEBUG = 0)
 {
   cli();

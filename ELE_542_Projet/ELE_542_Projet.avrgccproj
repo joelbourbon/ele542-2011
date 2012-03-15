@@ -97,9 +97,6 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config_ATmega32.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="core\ADC\adc.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -110,9 +107,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="core\Controle\moteur.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="core\datastore.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="core\LED\led.cpp">
