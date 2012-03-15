@@ -25,12 +25,12 @@ void NormalMode::init()
 	mStopWatchingStopButton  = 0;
   s.LedDriver.Led1.activateLED();
   s.Watchdog.disable();
+  s.LedDriver.Led8.ON();
   State = Stop;
   
   // TESTING PURPOSE
   
-  s.Uart.printString("\r\nUART IS WORKING\r\n");
-}
+  s.Uart.printString("\r\nUART IS WORKING\r\n");}
 
 
 //
@@ -86,6 +86,8 @@ void NormalMode::checkButtons()
 //
 void NormalMode::initStop()
 {
+	s.LedDriver.Led7.OFF();
+	s.LedDriver.Led8.ON();
 	// Disable the watchdog for the stop mode
 	s.Watchdog.disable();
 	
@@ -108,6 +110,8 @@ void NormalMode::initStop()
 //
 void NormalMode::initStart()
 {
+	s.LedDriver.Led7.ON();
+	s.LedDriver.Led8.OFF();
 	// Debouncing the buttons
 	mStopWatchingStartButton = 1;
 	mStopWatchingStopButton  = 0;

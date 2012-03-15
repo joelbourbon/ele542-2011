@@ -37,6 +37,7 @@ void Buffer_Reception::push(uint8_t iByte)
 		compte_donnees = 0;
 		debut_derniere = pointeur_ecriture - 2;
 		s.Watchdog.reset();
+		s.LedDriver.Led2.activateLED();
 	}
 	else
 	  ++compte_donnees;
