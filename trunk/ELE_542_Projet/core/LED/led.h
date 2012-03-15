@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include "core/PIN/pin.h"
 
-#define INSTANCEDELAY 400
+#define INSTANCEDELAY 20
 
 enum LedType
 {
