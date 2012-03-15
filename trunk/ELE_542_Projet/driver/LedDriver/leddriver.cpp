@@ -1,11 +1,11 @@
 /************************************************************************/
-/*  Title       : leddriver.cpp                                               */
+/*  Title       : leddriver.cpp                                         */
 /*                                                                      */
 /*  Class       : ELE-542                                               */  
 /*                                                                      */
 /*  Written by  : Joel Bourbonnais & Olivier Massé                      */
 /*	                                                                    */
-/*  Summary     :        */
+/*  Summary     : Managament of all the leds in one class  (task)       */
 /*                                                                      */
 /************************************************************************/
 
@@ -29,6 +29,9 @@ leddriver::leddriver():
   LedList[3] = &Led6;
 }
 
+//
+//  Task to be called to refresh the status of the automatic leds
+//
 void leddriver::refreshLEDsState()
 {
 	if (mNextEventTime > s.Timer1.time_ms)

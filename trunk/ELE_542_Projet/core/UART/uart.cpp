@@ -44,6 +44,9 @@ uart::uart()
   // RXB8 & TXB8 are used as Read/Write register for 9 bits long messages (With UDR)
 }
 
+//
+//  The loopback to keep the "Teleguidage" happy
+//
 void uart::uart_loopback(uint8_t iByte)
 {
 	RX_Buffer.push(iByte);  // Store dans le buffer du UART
@@ -51,22 +54,38 @@ void uart::uart_loopback(uint8_t iByte)
 	  UDR = iByte;            // Loop back directly to UDR to TX
 }
 
+//
+//  Acced to the print of the buffer
+//
 void uart::printString(const char* iString)
 {
 	s.Uart.TX_Buffer.Print(iString, 0);
 }
 
+//
+//  Special mode to print debug string in the "Teleguidage"
+//
 void uart::printDebug(const char* iString)
 {
+	s.Uart.LoopBackOn = 0;
+	s.Uart.TX_Buffer.push(0xFE);
   s.Uart.TX_Buffer.Print(iString, 1);
+  s.Uart.TX_Buffer.push(0xFF);
+  s.Uart.LoopBackOn = 1;
 }		
 
+//
+//  Interrupt management for the reception
+//
 ISR(USART_RXC_vect)
 {
 	s.Uart.wReceivedByte = UDR;
 	s.Uart.uart_loopback(s.Uart.wReceivedByte);
 }
 
+//
+//  Interrupt management for the transmission
+//
 ISR(USART_TXC_vect)
 {
 	if(s.Uart.TX_Buffer.countData > 0)

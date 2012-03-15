@@ -1,4 +1,13 @@
-
+/************************************************************************/
+/*  Title       : pin.cpp                                               */
+/*                                                                      */
+/*  Class       : ELE-542                                               */  
+/*                                                                      */
+/*  Written by  : Joel Bourbonnais & Olivier Massé                      */
+/*	                                                                    */
+/*  Summary     : Class to manage pins                                  */
+/*                                                                      */
+/************************************************************************/
 
 #include "pin.h"
 
@@ -41,21 +50,33 @@ pin::pin()
 	
 }
 
+//
+//  Put the pin in High state (Output)
+//
 void pin::setPIN()
 {
 	*PORTX |= (1 << PINNumber);
 }	
 	
+//
+//  Put the pin in Low state (Output)
+//
 void pin::clearPIN()
 {
 	*PORTX &= ~(1 << PINNumber);
 }	
 
+//
+//  Toggle the pin state (low/high) (Output)
+//
 void pin::toggle()
 {		   
 	*PORTX ^= (1 << PINNumber);
 }
 
+//
+//  Get the state of the pin (low/high) (Input)
+//
 PinState pin::getState()
 {
   return (*PINX & (1 << PINNumber)) > 0 ? High : Low ;

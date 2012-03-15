@@ -1,11 +1,11 @@
-//************************************************************************/
-/*  Title       : watchdog.h                                             */
+/************************************************************************/
+/*  Title       : watchdog.h                                            */
 /*                                                                      */
 /*  Class       : ELE-542                                               */  
 /*                                                                      */
 /*  Written by  : Joel Bourbonnais & Olivier Massé                      */
 /*	                                                                    */
-/*  Summary     : Include file for the normal mode                      */
+/*  Summary     : Include file for the watchdog                         */
 /*                                                                      */
 /************************************************************************/
 
@@ -22,5 +22,7 @@ private:
 public:
 	watchdog();
 	void reset();
+	void enable();
+	void disable();
 };
 #endif /* watchdog_H_ */

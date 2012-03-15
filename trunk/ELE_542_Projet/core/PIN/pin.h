@@ -1,9 +1,14 @@
-/**
-	@file moteur.h
-	@brief Header pour le fichier moteur.c
-	@author Bruno De Kelper et Louis-Bernard Lagueux
-	@date 13 Octobre 2006
-*/
+/************************************************************************/
+/*  Title       : pin.h                                                 */
+/*                                                                      */
+/*  Class       : ELE-542                                               */  
+/*                                                                      */
+/*  Written by  : Joel Bourbonnais & Olivier Massé                      */
+/*	                                                                    */
+/*  Summary     : Include file for the pin                              */
+/*                                                                      */
+/************************************************************************/
+
 #ifndef __PIN_H_
 #define __PIN_H_
 

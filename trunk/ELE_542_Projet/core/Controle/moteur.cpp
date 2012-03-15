@@ -1,4 +1,16 @@
+/************************************************************************/
+/*  Title       : moteur.cpp                                            */
+/*                                                                      */
+/*  Class       : ELE-542                                               */  
+/*                                                                      */
+/*  Written by  : Joel Bourbonnais & Olivier Massé                      */
+/*	                                                                    */
+/*  Summary     : Management of the motors (PWM)                        */
+/*                                                                      */
+/************************************************************************/
+
 #include "moteur.h"
+#include "math.h"
 
 moteur::moteur():
     Timer1()
@@ -9,8 +21,14 @@ moteur::moteur():
   {	  
   }
 
-void moteur::CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd)
+//
+//  Already giver function to calculate PWM but modified to fit our needs
+//  
+void moteur::CalculPWM(uint8_t iVitesse_D, uint8_t iAngle_D, float Vg, float Vd)
 {
+	float Vitesse_D = ((float)(iVitesse_D - 100)) / 100.f;
+	float Angle_D   = ((float)(iAngle_D >> 1)) * M_PI; 
+	      Angle_D  /= 180.f;
 
 	/**
 		Dans cette fonction, la valeur des duty cycle pour chaque moteur est calculé.  
@@ -83,6 +101,9 @@ void moteur::CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd)
 	Timer1.setCompareValueLeft( Duty_G * (float)Timer1.mTop_Value);
 }
 
+//
+//  Function to choose direction of the motor (simplified)
+//
 void moteur::ChangeMotorAction(Moteurs iMoteur, ActionMoteur iAction)
 {
 	pin* PinMoteur1 = &PIN_G1;

@@ -14,46 +14,53 @@
 
 #define F_CPU 16000000
 
+//
+//  Main init (only called once upon reset)
+//  
 void NormalMode::init()
 {
+	// Essential inits
 	mActiveTask = 1;
-  s.Uart.printString("UART IS WORKING\r\n");
+	mStopWatchingStartButton = 0;
+	mStopWatchingStopButton  = 0;
   s.LedDriver.Led1.activateLED();
+  s.Watchdog.disable();
+  State = Stop;
   
-  //s.Uart.TX_Buffer.push(0xFE);
-  //s.Uart.LoopBackOn = false;
+  // TESTING PURPOSE
+  
+  s.Uart.printString("\r\nUART IS WORKING\r\n");
 }
 
+
+//
+//  Main loop (only called once after the init)
+//
 void NormalMode::loop()
 {
-	// TEST THE CIRCULAR BUFFER  
-  //_delay_ms(2000);
-  //
-  //trame TEST;
-  //TEST = s.Uart.RX_Buffer.pull(); 
-  //s.Uart.TX_Buffer.push(TEST.Commande);
-  //s.Uart.TX_Buffer.push(TEST.Vitesse);
-  //s.Uart.TX_Buffer.push(TEST.Angle);
-  //s.Uart.TX_Buffer.sendData();
-
-  //s.uart.LoopBackOn = true;
-  
-  s.Watchdog.reset(); 
-  
-  s.Moteur.ChangeMotorAction(MoteurDroit,  MarcheAvant);
-  s.Moteur.ChangeMotorAction(MoteurGauche, MarcheAvant);
-  
-  //s.Timer1.setCompareValueLeft(5000);
-  //s.Timer1.setCompareValueRight(5000);
-  
-  processTasks();
-  
-  //trame TEST;
-  //TEST = s.Uart.RX_Buffer.pull();
-  //
-  //s.Moteur.CalculPWM(TEST.Vitesse, TEST.Angle, 0, 0);  
+	checkButtons();
+	
+	// Start state loop
+	if(State == Start)
+  {	  
+	  // TO BE REMOVED FROM HERE TO UART
+	  s.Watchdog.reset();
+	  
+	  // START HERE
+	  trame& wRecu = s.Uart.RX_Buffer.pull();
+	  s.Moteur.CalculPWM(wRecu.Vitesse, wRecu.Angle, s.ADC1.getAvgLeftMotor(), s.ADC1.getAvgRightMotor());
+	  processTasks();
+  }
+	
+	// Stop state loop
+	else
+	{
+	}
 }
 
+//
+//  Call all the task that needs to be executed
+//
 void NormalMode::processTasks()
 {
 	if(1 == mActiveTask)
@@ -61,4 +68,54 @@ void NormalMode::processTasks()
 		s.ADC1.processAverageADC();
 		s.LedDriver.refreshLEDsState();
 	}		
+}
+
+//
+//  Check if a button is pressed (ON/OFF)
+//
+void NormalMode::checkButtons()
+{
+	if (s.StartButton.getState() == Low && mStopWatchingStartButton != 1)
+	  initStart();
+	else if(s.StopButton.getState() == Low && mStopWatchingStopButton != 1)
+	  initStop();
+}	
+
+//
+//  Init the stop state
+//
+void NormalMode::initStop()
+{
+	// Disable the watchdog for the stop mode
+	s.Watchdog.disable();
+	
+	// Debouncing the buttons
+	mStopWatchingStartButton = 0;
+	mStopWatchingStopButton  = 1;
+	
+	// Stop everything
+	s.Moteur.ChangeMotorAction(MoteurDroit,  Neutre);
+  s.Moteur.ChangeMotorAction(MoteurGauche, Neutre);  
+  s.Timer1.setCompareValueLeft(0);
+  s.Timer1.setCompareValueRight(0);
+  
+  // Stay in the main loop in Stop mode
+  State = Stop;
+}
+
+//
+//  Init the start state
+//
+void NormalMode::initStart()
+{
+	// Debouncing the buttons
+	mStopWatchingStartButton = 1;
+	mStopWatchingStopButton  = 0;
+  
+  // Start calibration of the ADC
+  s.ADC1.calibrate();
+  
+  // Stay in the main loop in start mode
+  s.Watchdog.enable();  
+  State = Start;
 }
