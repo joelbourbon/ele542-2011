@@ -1,0 +1,3 @@
+### UART.H ###
+
+- L'angle garde l'ancienne valeur plutôt que de passer à 0, ce qui éviter les retours inutiles à 0 degrée. Ce n'est pas idéal, puisqu'il termine son mouvement de rotation avant d'arrêter. Il faudrait entrer directement des valeurs 0 de duty cycle au deux moteurs.
