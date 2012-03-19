@@ -1,21 +1,19 @@
 ###############################################################################
-# Makefile for the project proto1
+# Makefile for the project Proto2
 ###############################################################################
 
 ## General Flags
-PROJECT = proto1
+PROJECT = Proto2
 MCU = atmega32
-TARGET = proto1.elf
+TARGET = Proto2.elf
 CC = avr-gcc
-
-CPP = avr-g++
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99                     -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -std=gnu99   -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +23,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=proto1.map
+LDFLAGS +=  -Wl,-Map=Proto2.map
 
 
 ## Intel Hex file production flags
@@ -37,19 +35,40 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = proto1.o moteur.o 
+OBJECTS = Proto2.o ADCcontrol.o LedsControl.o moteur.o motorControl.o portsControl.o sonars.o timer.o uart.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) proto1.hex proto1.eep proto1.lss size
+all: $(TARGET) Proto2.hex Proto2.eep Proto2.lss size
 
 ## Compile
-proto1.o: ../proto1.c
+Proto2.o: ../Proto2.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+ADCcontrol.o: ../ADCcontrol.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+LedsControl.o: ../LedsControl.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 moteur.o: ../moteur.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+motorControl.o: ../motorControl.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+portsControl.o: ../portsControl.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+sonars.o: ../sonars.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+timer.o: ../timer.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+uart.o: ../uart.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -72,7 +91,7 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) proto1.elf dep/* proto1.hex proto1.eep proto1.lss proto1.map
+	-rm -rf $(OBJECTS) Proto2.elf dep/* Proto2.hex Proto2.eep Proto2.lss Proto2.map
 
 
 ## Other dependencies
