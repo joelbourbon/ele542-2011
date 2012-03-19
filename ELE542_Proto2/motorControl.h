@@ -34,7 +34,7 @@
 
 #define BASE_RATIO	(float)(0.00555555555555)	//1/180
 #define ANGLE_RATIO	(float)(2*Pi*BASE_RATIO)	//pre-calculated value to avoid division
-#define ABSOLUTE_ZERO (signed int)0
+#define ABSOLUTE_ZERO 0
 
 //Motor directions
 #define LEFT_MOTOR_FORWARD		(1<<DIR_G1)|(0<<DIR_G2)

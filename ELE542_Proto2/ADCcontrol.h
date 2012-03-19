@@ -10,7 +10,7 @@
 
 //#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
-#define MAX_ADC_SAMPLES	12
+#define MAX_ADC_SAMPLES	20
 #define CAL_SAMPLES 25
 #define CAL_SAMPLES_RATIO  (1/CAL_SAMPLES)
 #define MAX_ADC_SAMPLES_RATIO	(1/MAX_ADC_SAMPLES)
