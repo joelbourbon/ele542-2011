@@ -8,6 +8,8 @@ MCU = atmega32
 TARGET = Proto2.elf
 CC = avr-gcc
 
+CPP = avr-g++
+
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
 

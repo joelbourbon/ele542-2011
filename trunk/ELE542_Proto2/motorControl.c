@@ -115,6 +115,7 @@ void checkDirection(void)
 	else if (convertedMotorSpeed.right < ABSOLUTE_ZERO)
 	{
 		motorDirection |= RIGHT_MOTOR_BACKWARD;
+		convertedMotorSpeed.right = ((-1)*convertedMotorSpeed.right);
 	}
 	else if (convertedMotorSpeed.right == ABSOLUTE_ZERO)	//in the case of a 0
 	{
@@ -126,7 +127,6 @@ void checkDirection(void)
 		{
 			motorDirection |= RIGHT_MOTOR_STOP;	//else only send stop
 		}
-		convertedMotorSpeed.right = ((-1)*convertedMotorSpeed.right);
 	}
 
 }

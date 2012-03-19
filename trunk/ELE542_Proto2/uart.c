@@ -81,6 +81,7 @@ void uart_init(void)
 	ReceiverState = STATE_WAITING;    
 	
 	//init all flags
+	echo_on_flag = 1;
 	uartTxReady = 1;
 	uartReadyFlag = 0;
 	motorCommandCompletedFlag = 0;
