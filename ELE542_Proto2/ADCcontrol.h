@@ -1,12 +1,31 @@
+////////////////////////////////////////////////////////
+//File: ADCcontrol.h
+//
+//Header file for ADC controls
+//
+//This file contains functions to collect, interpret
+// and convert ADC data. It also contains calibration
+// related functions
+//
+//Author: Vincent Léger, Jason Cormier
+//
+////////////////////////////////////////////////////////
+
+/**************/
+/***INCLUDES***/
+/**************/
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "motorControl.h"
-
 
 #ifndef _ADCCONTROL_H_
 #define _ADCCONTROL_H_
 
 
+/**************/
+/***DEFINES****/
+/**************/
 
 //#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
@@ -28,8 +47,12 @@
 #define MOTOR_DIR_LEFT		2
 #define MOTOR_DIR_RIGHT		3
 
-#define MOTOR_DIR_IN_LEFT	0x04
-#define MOTOR_DIR_IN_RIGHT	0x08
+#define MOTOR_DIR_IN_LEFT	0x04 // DIRg on PORTA
+#define MOTOR_DIR_IN_RIGHT	0x08 // DIRd on PORTA
+
+/**************************/
+/***Function prototypes****/
+/**************************/
 
 void initADC(void);
 void calibrateMotors(void);
@@ -43,18 +66,13 @@ void compileAdcData(void);
 void fetchAdcValues(void);
 void waitValueIsReady(void);
 
-// REMOVE
-unsigned char patate;
-unsigned char patate2;
-float allo;
+volatile float ADCcalib_value; //  Add ADC mean values during calibration
 
-volatile float ADCcalib_value; 
+volatile unsigned char adcCompileReadyFlag; //When set, MAX_ADC_SAMPLES were added to a "total value" variable
 
-volatile unsigned char adcCompileReadyFlag;
+//extern volatile unsigned char adcCompletedFlag; //ADC mean value for current cycle computed
 
-//extern volatile unsigned char adcCompletedFlag;
-
-volatile unsigned char adcReadyFlag;//Adc interrupt flag
+volatile unsigned char adcReadyFlag;//ADC interrupt flag
 volatile unsigned int adcValuesCounter;		//Counter for controling the number of ADC samples to take
 volatile unsigned char adcMUXValue;			//Keeps the current state of ADC MUX register --> reading left or right ?
 //extern volatile unsigned char adcCalibrationFlag;	//0 = Normal operations 1 = Calibration mode
@@ -62,25 +80,29 @@ volatile unsigned char i; // Calibration iterator
 
 struct MotorLimits
 {
-	float posMax;
-	float negMax;
-	float posZero;
-	float negZero;
+	float posMax; // Vmax+
+	float negMax; // Vmax-
+	float posZero; // Vzero+
+	float negZero; // Vzero-
+	
+	//Added to avoid problem while using compileAdcData in calibrateMotors
+	//Could be removed by using a special ADC Data compiling function dedicated to calibrateMotors
 	float posMaxTEMP;
 	float negMaxTEMP;
 	float posZeroTEMP;
 	float negZeroTEMP;
-	int adcMaxValueHigh;
-	int adcMaxValueLow;
-}leftLimits, rightLimits;
+	//int adcMaxValueHigh;
+	//int adcMaxValueLow;
+	
+}leftLimits, rightLimits; // right & left motors
 
-//extern volatile  struct motorSpeeds adcValues;
+//extern volatile  struct motorSpeeds adcValues; //adcValues.left  and adcValues.right on a scale of [-1 to 1]
 
 
-volatile unsigned int TotalValueLeft;
-volatile unsigned int TotalValueRight;
-volatile unsigned int ActualValueLeft;
-volatile unsigned int ActualValueRight;
+volatile unsigned int TotalValueLeft; // Add ADC values before calculating mean value for left motor
+volatile unsigned int TotalValueRight; // Add ADC values before calculating mean value for right motor
+//volatile unsigned int ActualValueLeft;
+//volatile unsigned int ActualValueRight;
 //volatile unsigned char motorDirLeft;
 //volatile unsigned char motorDirRight;
 
