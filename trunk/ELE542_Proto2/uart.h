@@ -33,7 +33,7 @@
 // Tx interrupt = disabled
 #define UART_BAUD_RATE      9600      /* 9600 baud */
 //To automate bit selection for desired baud rate in UBRR register 
-#define UART_BAUD_SELECT (F_CPU/(UART_BAUD_RATE*16l)-1)
+#define UART_BAUD_SELECT (16000000/(UART_BAUD_RATE*16l)-1)
 /* configure asynchronous operation, no parity, 1 stop bit, 8 data bits, Tx on rising edge */
 #define UCSRC_REGISTER_SELECTIONS	((1<<URSEL)|(0<<UMSEL)|(0<<UPM1)|(0<<UPM0)|(0<<USBS)|(1<<UCSZ1)|(1<<UCSZ0)|(0<<UCPOL))
 /* enable RxD/TxD and Rx int */
