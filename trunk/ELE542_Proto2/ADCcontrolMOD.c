@@ -106,10 +106,20 @@ void initADC(void)
 void readADC(void)
 {
 	if (adcCompileReadyFlag == 0)
-		fetchAdcValues();  // Collect an ADC value
+		if (adcCalibrationFlag == 1)
+		{	
+			if (fetchCalibDone == 0)
+			{
+			fetchCalib();
+			}
+		}
+		else
+		{
+			fetchAdcValues();  // Collect an ADC value
+		}
 
 	// When MAX_ADC_SAMPLES values are acquired 
-	if (adcValuesCounter == MAX_ADC_SAMPLES)
+	else if (adcValuesCounter == MAX_ADC_SAMPLES)
 	{
 		adcCompileReadyFlag = 1; // Mean value may now be calculated 
 	}
@@ -307,6 +317,42 @@ void compileAdcData(void)
 }
 
 ///////////////////////////////////////////
+//Function name: fetchCalib
+//
+//Brief:   
+//
+//Inputs: -none
+//
+//Outputs:	-none
+//
+//Return value:	-none
+//
+///////////////////////////////////////////
+void fetchCalib(void) // Test
+{
+	//from ADC... to integer
+	if (adcMUXValue == ADC_MUX_READ_LEFT)
+	{
+		adcMUXValue = ADC_MUX_READ_RIGHT;
+		ADMUX = ADC_MUX_READ_RIGHT;
+
+		ADCcalib_value_left = (int)((unsigned char)ADCL);
+		ADCcalib_value_left = (int)(((int)((unsigned char)ADCH))<<8);
+
+
+	}
+	else if (adcMUXValue == ADC_MUX_READ_RIGHT)
+	{
+		adcMUXValue = ADC_MUX_READ_LEFT;
+		ADMUX = ADC_MUX_READ_LEFT;
+
+		ADCcalib_value_right = (int)((unsigned char)ADCL);
+		ADCcalib_value_right = (int)(((int)((unsigned char)ADCH))<<8);
+	
+		fetchCalibDone == 1;
+	}
+}
+///////////////////////////////////////////
 //Function name: calibrateMotors
 //
 //Brief:   Find the values that the ADC will send for limit values of both motor.
@@ -330,7 +376,9 @@ void calibrateMotors(void)
 {
 	ADCcalib_value = 0.0;
 	adcCalibrationFlag = 1; // Starting calibration
-	
+	ADCcalib_value_left = 0;
+	ADCcalib_value_right = 0;
+
 	//make sure motors are stopped so that PWM stays at 0
 	OCR1AL = 0;
 	OCR1AH = 0;
@@ -338,63 +386,79 @@ void calibrateMotors(void)
 	OCR1BH = 0;
 
 	/*#######################*/
-	/* LEFT MOTOR CALIBRATION*/
+	/*     CALIBRATION	     */
 	/*#######################*/
 
-	// Left Max Forward Calibration
-	PORTD = (LEFT_MOTOR_FORWARD)|(RIGHT_MOTOR_STOP);
+	// Max Forward Calibration
+	PORTD = (LEFT_MOTOR_FORWARD)|(RIGHT_MOTOR_FORWARD);
 	PORTA = (1<<CALIB_BIT);
+	
 
 	for (i=0;i<CAL_SAMPLES;i++){
-		while (adcCompileReadyFlag == 0);
-		compileAdcData();
-		ADCcalib_value += adcValues.left;
-		
-		
+		while (fetchCalibDone == 0);
+		totalCalibLeft += ADCCalib_value_left;
+		totalCalibRight += ADCCalib_value_right;
+		fetchCalibDone == 0;
 	}
-	leftLimits.posMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
-	ADCcalib_value = 0.0;
+	leftLimits.posMax = (totalCalibLeft) / CAL_SAMPLES;
+	rightLimits.posMax = (totalCalibRight) / CAL_SAMPLES;
+	totalCalibLeft = 0;
+	totalCalibRight = 0;
 
-	// Left Zero Forward Calibration
-	PORTD = (LEFT_MOTOR_FORWARD)|(RIGHT_MOTOR_STOP);
+	// Zero Forward Calibration
+	//PORTD = (LEFT_MOTOR_FORWARD)|(RIGHT_MOTOR_FORWARD); //! Redondant
 	PORTA = (0<<CALIB_BIT);
 
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
-		ADCcalib_value += adcValues.left;
+		ADCcalib_value_left += adcValues.left;
+		ADCcalib_value_right += adcValues.right;
 	}
-	leftLimits.posZeroTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
-	ADCcalib_value = 0.0;	
+	leftLimits.posZero = (ADCcalib_value_left) / CAL_SAMPLES;
+	rightLimits.posZero = (ADCcalib_value_right) / CAL_SAMPLES;
+	totalCalibLeft = 0;
+	totalCalibRight = 0;
 
-	// Left Max Backward Calibration
-	PORTD = (LEFT_MOTOR_BACKWARD)|(RIGHT_MOTOR_STOP);
+	// Max Backward Calibration
+	PORTD = (LEFT_MOTOR_BACKWARD)|(RIGHT_MOTOR_BACKWARD);
 	PORTA = (1<<CALIB_BIT);
 
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
-		ADCcalib_value += adcValues.left;
+		ADCcalib_value_left += adcValues.left;
+		ADCcalib_value_right += adcValues.right;
 	}
-	leftLimits.negMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
-	ADCcalib_value = 0.0;
+	leftLimits.negMax = (ADCcalib_value_left) / CAL_SAMPLES;
+	rightLimits.negMaxTEMP = (ADCcalib_value_right) / CAL_SAMPLES;
+	totalCalibLeft = 0;
+	totalCalibRight = 0;
 
-	// Left Zero Backward Calibration
-	PORTD = (LEFT_MOTOR_BACKWARD)|(RIGHT_MOTOR_STOP);
+	
+
+	// Zero Backward Calibration
+	//PORTD = (LEFT_MOTOR_BACKWARD)|(RIGHT_MOTOR_BACKWARD); //! Redondant
 	PORTA = (0<<CALIB_BIT);
 
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
-		ADCcalib_value += adcValues.left;
+		ADCcalib_value_left += adcValues.left;
+		ADCcalib_value_right += adcValues.right;
 	}
-	leftLimits.negZeroTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
-	ADCcalib_value = 0.0;
+	leftLimits.negZero = (ADCcalib_value_left) / CAL_SAMPLES;
+	rightLimits.negZero = (ADCcalib_value_right) / CAL_SAMPLES;
+	totalCalibLeft = 0;
+	totalCalibRight = 0;
 
+
+
+/* À supprimer après validation */
 	/*#######################*/
 	/*RIGHT MOTOR CALIBRATION*/
 	/*#######################*/ 
-
+/*
 	// Right Max Forward Calibration
 	PORTD = (RIGHT_MOTOR_FORWARD)|(LEFT_MOTOR_STOP);
 	PORTA = (1<<CALIB_BIT);
@@ -403,6 +467,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.posMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -415,6 +480,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.posZeroTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -427,6 +493,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.negMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -439,13 +506,20 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.negZeroTEMP = 	(ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
 	ADCcalib_value = 0.0;
 
- //CHANGEMENT temporaire
+*/
+
+
+ //CHANGEMENT pour éviter chiage
 	// Assign final values to limit var
+
+/*	### Nouvelle fonction dédié fetchCalib, var temp inutile
+
 	leftLimits.posMax = leftLimits.posMaxTEMP;
 	leftLimits.posZero = leftLimits.posZeroTEMP;
 	leftLimits.negMax = leftLimits.negMaxTEMP;
@@ -454,22 +528,9 @@ void calibrateMotors(void)
 	rightLimits.posZero = rightLimits.posZeroTEMP;
 	rightLimits.negMax = rightLimits.negMaxTEMP;
 	rightLimits.negZero = rightLimits.negZeroTEMP;
-	
+*/
+
+
 	// End calibration
 	adcCalibrationFlag = 0;
 	PORTD = (RIGHT_MOTOR_STOP) | (LEFT_MOTOR_STOP);
-
-}
-
-/* Vérifier et supprimer
-void waitValueIsReady(void)
-{
-	//adcCompletedFlag = 0;		
-	while (adcCompletedFlag == 0){}
-
-	adcCompletedFlag = 0;
-	while (adcCompletedFlag == 0){}
-
-
-}
-*/
