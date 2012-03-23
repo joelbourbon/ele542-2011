@@ -1,7 +1,4 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include "includes.h"
 #include "uart.h"
 #include "motorControl.h"
 #include "timer.h"
@@ -18,9 +15,6 @@
 #ifndef F_CPU
 #define F_CPU  16000000UL  // Crystal 16.000 Mhz
 #endif
-
-
-
 
 //GLOBAL VARIABLES
 // LEDS
