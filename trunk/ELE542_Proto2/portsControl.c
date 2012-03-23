@@ -79,6 +79,7 @@ void checkControls(void)	//Check switch inputs
 		setWatchDog();		//enable watchdog
 		resetTWI();			//reset TWI com
 	}
+	
 	if (~PINA & INPUT_DIE)
 	{
 		robotState = STATE_ASLEEP;

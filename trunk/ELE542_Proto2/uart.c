@@ -23,10 +23,13 @@
 //Brief: Set uartTxReady flag for transmit methods
 //
 ///////////////////////////////////////////
-ISR(USART_TXC_vect) 	//TX ready     
+ISR(USART_TXC_vect, ISR_NAKED) 	//TX ready     
 // signal handler for uart txd ready interrupt
 {
+	OSIntEnter();
 	uartTxReady = 1;
+	OSIntExit();
+	itoa();
 }
 ///////////////////////////////////////////
 //Interrupt name: ISR(USART_RXC_vect)
@@ -38,9 +41,10 @@ ISR(USART_TXC_vect) 	//TX ready
 //		 not in debug mode.
 //
 ///////////////////////////////////////////
-ISR(USART_RXC_vect)     //RX ready 
+ISR(USART_RXC_vect, ISR_NAKED)     //RX ready 
 // signal handler for receive complete interrupt
 {
+	OSIntEnter();
 	data = UDR;        // read byte for UART data buffer
 	
 	processData();
@@ -51,6 +55,7 @@ ISR(USART_RXC_vect)     //RX ready
 	}
 
 	uartReadyFlag = 1;
+	OSIntExit();
 }
 
 /***************************/

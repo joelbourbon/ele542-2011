@@ -23,9 +23,11 @@
 //		 status to process TWI communications.
 //
 ///////////////////////////////////////////
-ISR(TWI_vect)	//TWI interrupt vector
+ISR(TWI_vect, ISR_NAKED)	//TWI interrupt vector
 {		
+	OSIntEnter();
 	TWIcheckState();	//TWI Rx or Tx
+	OSIntEnter();
 }
 
 
