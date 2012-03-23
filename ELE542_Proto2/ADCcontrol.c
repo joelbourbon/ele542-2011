@@ -18,10 +18,12 @@
 /***Function definitions****/
 /***************************/
 
-ISR(ADC_vect)
+ISR(ADC_vect, ISR_NAKED)
 {
+	OSIntEnter();
 	if (adcCompletedFlag == 0)
 		readADC();
+	OSIntExit();
 }
 
 /* Vérifier et effacer
