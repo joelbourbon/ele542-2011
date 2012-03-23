@@ -64,6 +64,7 @@ void checkForAdc(void);
 
 void compileAdcData(void);
 void fetchAdcValues(void);
+void fetchCalib(void); // test
 void waitValueIsReady(void);
 
 volatile float ADCcalib_value; //  Add ADC mean values during calibration
@@ -101,6 +102,9 @@ struct MotorLimits
 
 volatile unsigned int TotalValueLeft; // Add ADC values before calculating mean value for left motor
 volatile unsigned int TotalValueRight; // Add ADC values before calculating mean value for right motor
+volatile unsigned int totalCalibLeft;
+volatile unsigned int totalCalibLeft;
+volatile unsigned char fetchCalibDone;
 //volatile unsigned int ActualValueLeft;
 //volatile unsigned int ActualValueRight;
 //volatile unsigned char motorDirLeft;
