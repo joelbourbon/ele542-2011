@@ -14,8 +14,7 @@
 /**************/
 /***INCLUDES***/
 /**************/
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include "ucos_core/includes.h"
 #include "motorControl.h"
 
 

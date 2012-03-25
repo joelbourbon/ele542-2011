@@ -11,7 +11,7 @@
 /**************/
 /***INCLUDES***/
 /**************/
-#include <avr/io.h>
+#include "ucos_core/includes.h"
 #include "moteur.h"
 #include "timer.h"
 #include "sonars.h"

@@ -14,7 +14,7 @@
 
 /* Definition moved here so it can be used in the assembler file OS_CPU_A.ASM 							*/
 /* See below for the meaning of this define 															*/
-
+#include "includes.h"
 #define  OS_CRITICAL_METHOD    2
 
 

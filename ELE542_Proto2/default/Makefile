@@ -8,8 +8,6 @@ MCU = atmega32
 TARGET = Proto2.elf
 CC = avr-gcc
 
-CPP = avr-g++
-
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
 
@@ -37,7 +35,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = Proto2.o ADCcontrol.o LedsControl.o moteur.o motorControl.o portsControl.o sonars.o timer.o uart.o 
+OBJECTS = Proto2.o ADCcontrol.o LedsControl.o moteur.o motorControl.o portsControl.o sonars.o timer.o uart.o os_mem.o os_cpu_c.o ucos_ii.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -71,6 +69,15 @@ timer.o: ../timer.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 uart.o: ../uart.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+os_mem.o: ../ucos_core/os_mem.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+os_cpu_c.o: ../ucos_core/os_cpu_c.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+ucos_ii.o: ../ucos_core/ucos_ii.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

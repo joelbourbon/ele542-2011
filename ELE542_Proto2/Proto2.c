@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "ucos_core/includes.h"
 #include "uart.h"
 #include "motorControl.h"
 #include "timer.h"
@@ -131,7 +131,7 @@ static  void  Task_MainLoop (void *p_arg)
 	  InitOSTimer();
 	  sei();
 
-    while (TRUE) {               // Task body, always written as an infinite loop.
+    while (1) {               // Task body, always written as an infinite loop.
       // checkControls();  // --> In a task
 		
 		  //also disable interrupts and everything ??? 
@@ -162,7 +162,7 @@ static  void  Task_CheckButtons(void *p_arg)
 {
   (void)p_arg;          // Prevent compiler warnings
 
-  while (TRUE) {               // Task body, always written as an infinite loop.
+  while (1) {               // Task body, always written as an infinite loop.
     checkControls();
 	  OSTimeDly(5);
   }
