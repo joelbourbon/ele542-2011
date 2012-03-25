@@ -18,15 +18,12 @@
 /***Function definitions****/
 /***************************/
 
-ISR(ADC_vect, ISR_NAKED)
+ISR(ADC_vect)
 {
-	OSIntEnter();
 	if (adcCompletedFlag == 0)
 		readADC();
-	OSIntExit();
 }
 
-/* Vérifier et effacer
 void startADC(void)
 {
 	while (adcCompletedFlag == 0) {}
@@ -35,15 +32,13 @@ void startADC(void)
 	while (adcCompletedFlag == 0) {}
 	adcCompletedFlag = 0;
 }
-*/
 
-/* Vérifier et effacer
 void stopADC(void)
 {
 	while (adcCompletedFlag == 1) {}
 	adcCompletedFlag = 1;
 }
-*/
+
 
 ///////////////////////////////////////////
 //Function name: initADC
@@ -63,8 +58,10 @@ void initADC(void)
 
 	SFIOR = (0<<ADTS2)|(0<<ADTS1)|(0<<ADTS0);
 
+	//adcMUXValue = ADC_MUX_READ_LEFT;
+	//ADMUX = adcMUXValue;
+	ADMUX = ADC_MUX_READ_LEFT;
 	adcMUXValue = ADC_MUX_READ_LEFT;
-	ADMUX = adcMUXValue;
 	
 	ADCSRA = (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN)|(1<<ADIE)|(1<<ADSC)|(1<<ADATE);
 
@@ -76,19 +73,24 @@ void initADC(void)
 
 	// Initiatlisation des valeurs limites précalibration
 	// Entre -1023 et -0; 0 et 1023.
+	/* Inutile
+	leftLimits.adcMaxValueHigh = MAX_ADC_VALUE;
+	leftLimits.adcMaxValueLow = MAX_ADC_VALUE; */
+	leftLimits.posMax = (float)MAX_ADC_VALUE;
+	leftLimits.negMax = (float)((-1)*MAX_ADC_VALUE);
+	leftLimits.posZero = 0.0;
+	leftLimits.negZero = 0.0;
 	
-	// Initializing with theorical limit values 
-	leftLimits.posMax = (float)MAX_ADC_VALUE; // Vmax+ = 1023
-	leftLimits.negMax = (float)((-1)*MAX_ADC_VALUE); // Vmax- = 1023
-	leftLimits.posZero = 0.0; // Vzero+ = 1023
-	leftLimits.negZero = 0.0; // Vzero- = 1023
-	
-	rightLimits.posMax = (float)MAX_ADC_VALUE; // Vmax+ = 1023
-	rightLimits.negMax = (float)((-1)*MAX_ADC_VALUE); // Vmax- = 1023
-	rightLimits.posZero = 0.0; // Vzero+ = 1023
-	rightLimits.negZero = 0.0; // Vzero- = 1023
-
+	/* Inutile
+	rightLimits.adcMaxValueHigh = MAX_ADC_VALUE;
+	rightLimits.adcMaxValueLow = MAX_ADC_VALUE; */
+	rightLimits.posMax = (float)MAX_ADC_VALUE;
+	rightLimits.negMax = (float)((-1)*MAX_ADC_VALUE);
+	rightLimits.posZero = 0.0;
+	rightLimits.negZero = 0.0;
+	ADMUX = ADC_MUX_READ_RIGHT;
 	adcCompileReadyFlag = 0;
+	
 	
 
 }
@@ -108,12 +110,11 @@ void initADC(void)
 void readADC(void)
 {
 	if (adcCompileReadyFlag == 0)
-		fetchAdcValues();  // Collect an ADC value
+		fetchAdcValues();	
 
-	// When MAX_ADC_SAMPLES values are acquired 
 	if (adcValuesCounter == MAX_ADC_SAMPLES)
 	{
-		adcCompileReadyFlag = 1; // Mean value may now be calculated 
+		adcCompileReadyFlag = 1;
 	}
 }
 
@@ -135,9 +136,9 @@ void checkForAdc(void)
 {
 	if (adcCompileReadyFlag == 1)
 	{	
-		compileAdcData(); // Compute ADC mean value for the current cycle
-		adcCompileReadyFlag = 0; // New values must be acquired for tne next cycle
-		motorReadyFlag = 1; // The newly computed ADC value is ready to be sent to CalculPWM
+		compileAdcData();
+		adcCompileReadyFlag = 0;
+		motorReadyFlag = 1;
 	}
 }
 
@@ -159,11 +160,9 @@ void fetchAdcValues(void)
 	//from ADC... to integer
 	if (adcMUXValue == ADC_MUX_READ_LEFT)
 	{
-		// Next acquisition must be for the RIGHT motor
 		adcMUXValue = ADC_MUX_READ_RIGHT;
-		ADMUX = ADC_MUX_READ_RIGHT;
-		
-		// Reading from ADC registers
+		ADMUX = ADC_MUX_READ_LEFT;
+
 		TotalValueLeft += (int)((unsigned char)ADCL);
 		TotalValueLeft += (int)(((int)((unsigned char)ADCH))<<8);
 
@@ -171,19 +170,16 @@ void fetchAdcValues(void)
 	}
 	else if (adcMUXValue == ADC_MUX_READ_RIGHT)
 	{
-		// Next acquisition must be for the LEFT motor
 		adcMUXValue = ADC_MUX_READ_LEFT;
-		ADMUX = ADC_MUX_READ_LEFT;
+		ADMUX = ADC_MUX_READ_RIGHT;
 
-		// Reading from ADC registers
 		TotalValueRight += (int)((unsigned char)ADCL);
 		TotalValueRight += (int)(((int)((unsigned char)ADCH))<<8);
 	
 
-		adcValuesCounter++; //Once both motor speed have been read
+		adcValuesCounter++;
 	}
 }
-
 ///////////////////////////////////////////
 //Function name: compileAdcData
 //
@@ -201,139 +197,123 @@ void fetchAdcValues(void)
 ///////////////////////////////////////////
 void compileAdcData(void)
 {	
-	/* Calculate mean value */
-	//adcValues.left and adcValues.right are from 0 to 1023 for now
-	//they will be from -1 to 1 at the end of the function
+	// ### Corrigé! Mais non optimisé.
+
+	//cli();
+
+
+	//LEFT MOTOR
+	//adcValues.left = TotalValueLeft * MAX_ADC_SAMPLES_RATIO;
 	adcValues.left = TotalValueLeft / MAX_ADC_SAMPLES; 
 	adcValues.right = TotalValueRight / MAX_ADC_SAMPLES;
-	
-	//LEFT MOTOR
 	//Check motor direction input
 	if (MOTOR_DIR_IN_LEFT & PINA)
-	/*Left Motor BACKWARD case*/
+	//BACKWARD
 	{
-		adcValues.left = ((-1)*(adcValues.left)); //if Motor is spinning backward, the value should be from 0 to -1023
+		adcValues.left = ((-1)*(adcValues.left)); //adcValues sur 1024
 
 		if (adcValues.left < leftLimits.negZero)  // Comparaison avec valeur sur 1
 		{
+			//adcValues.left -= leftLimits.negZero; //REMOVE
 			if (adcValues.left < leftLimits.negMax)
 			{
-				//if value is over the calibration limit, it is set to the current limit
-				//so that it takes the maximum value
 				adcValues.left = leftLimits.negMax;
 			}
-			//Conversion to a unit scale
-			// Relative value divided by effective range
+			//On ramène sur 1
 			adcValues.left = (-1) * (adcValues.left-leftLimits.negZero) / (leftLimits.negMax-leftLimits.negZero);
+			//adcValues.left = (adcValues.left / leftLimits.adcMaxValueLow);
 		}
 		else
 		{
-			// If value is between 0 and calibration zero, it is set to the lowest value, 0.0
+			//adcValues.left = 0.0; Non, la valeur doit être ramené à negZero
+			//VINCE: not sure... tu veux vraiment envoyer la valeur de la zone morte ?
+			//			en fait ce qu'on veut c'est qu'il le voit comme un zéro.
+			//Oui MONSIEUR! Encore une boulette. C'est arrangé.
 			adcValues.left = 0.0;
 		}
 	}
 	else
-	/*Left Motor FORWARD case*/
+	//FORWARD
 	{
 		if (adcValues.left > leftLimits.posZero)
 		{
+		//	adcValues.left -= leftLimits.posZero; //REMOVE
 			if (adcValues.left > leftLimits.posMax)
 			{
 				adcValues.left = leftLimits.posMax;
 			}
-			//Conversion to a unit scale
-			// Relative value divided by effective range
 			adcValues.left = (adcValues.left-leftLimits.posZero) / (leftLimits.posMax-leftLimits.posZero);
+			//adcValues.left = (adcValues.left-leftLimits.posZero) / leftLimits.adcMaxValueHigh; //adcValues sur 1
 		}
 		else
 		{
-			// If value is between 0 and calibration zero, it is set to the lowest value, 0.0
+			//adcValues.left = 0.0; Non, la valeur doit être ramené à posZero
 			adcValues.left = 0.0;
 		}
 	}
 
 	//RIGHT MOTOR
+	//adcValues.right = TotalValueRight * MAX_ADC_SAMPLES_RATIO;
+	//adcValues.right = ActualValueRight / MAX_ADC_SAMPLES;
 	//Check motor direction input
 	if (MOTOR_DIR_IN_RIGHT & PINA)
-	/*Right Motor BACKWARD case*/
+	//BACKWARD
 	{
-		adcValues.right = ((-1)*adcValues.right); //if Motor is spinning backward, the value should be from 0 to -1023
+		adcValues.right = ((-1)*adcValues.right); //adcValues sur 1024
 		if (adcValues.right < rightLimits.negZero)
 		{
+			//adcValues.right -= rightLimits.negZero; //REMOVE
 			if (adcValues.right < leftLimits.negMax)
 			{
-				//if value is over the calibration limit, it is set to the current limit
-				//so that it takes the maximum value
 				adcValues.right = rightLimits.negMax;
 			}
-			//Conversion to a unit scale
-			// Relative value divided by effective range
 			adcValues.right = (-1) * (adcValues.right-rightLimits.negZero) / (rightLimits.negMax-rightLimits.negZero);
+			//adcValues.right = (adcValues.right / rightLimits.adcMaxValueLow);
 		}
 		else
 		{
-			// If value is between 0 and calibration zero, it is set to the lowest value, 0.0
+			//adcValues.right = 0.0; NO
 			adcValues.right = 0.0;
 		}
 	}
 	else
-	/*Right Motor FORWARD case*/
+	//FORWARD
 	{
 		if (adcValues.right > rightLimits.posZero)
 		{
 		//	adcValues.right -= rightLimits.posZero; //REMOVE
 			if (adcValues.right > rightLimits.posMax)
 			{
-				//if value is over the calibration limit, it is set to the current limit
-				//so that it takes the maximum value
 				adcValues.right = rightLimits.posMax; 
 			}
-			//Conversion to a unit scale
-			// Relative value divided by effective range
 			adcValues.right = (adcValues.right-rightLimits.posZero) / (rightLimits.posMax-rightLimits.posZero);
+			//adcValues.right = adcValues.right / rightLimits.adcMaxValueHigh; //adcValues sur 1
 		}
 		else
 		{
-			// If value is between 0 and calibration zero, it is set to the lowest value, 0.0
+			//adcValues.right = 0.0; NOPE
 			adcValues.right = 0.0;
 		}
 	}
 	
+		
+//	sei();
 
 	//reset values
 	TotalValueRight = 0;
 	TotalValueLeft = 0;
 	adcValuesCounter = 0;
-	
-	adcCompletedFlag = 1;   //ADC final values computing is done
+	adcCompletedFlag = 1;
 }
 
-///////////////////////////////////////////
-//Function name: calibrateMotors
-//
-//Brief:   Find the values that the ADC will send for limit values of both motor.
-//			ADC values sent to CalculPWM will be converted to a [-1:1] range
-//			according to the calibration range.
-//
-//			ADC range without calibration:
-//			|-1023 | ... |0| ... |1023|
-//
-//			ADC range with calibration:
-//			|Vmax- and lower| ... |Between Vzero- and Vzero+| ... |Vmax+ and higher|
-//
-//Inputs: -none
-//
-//Outputs:	-none
-//
-//Return value:	-none
-//
-///////////////////////////////////////////
 void calibrateMotors(void)
 {
 	ADCcalib_value = 0.0;
-	adcCalibrationFlag = 1; // Starting calibration
-	
-	//make sure motors are stopped so that PWM stays at 0
+	adcCalibrationFlag = 1;
+	//adcCompileReadyFlag = 1;
+	//CA SERT A RIEN CE QUE JE FAIT POUR L'INSTANT... C'EST SUR LE RANGE QU'IL FAUT INTERPRÉTER LA DIFFÉRENCE
+	//SINON C'EST JUSTE PLUS FACILE D'ATTEINDRE LES LIMITES
+	//make sure motors are stopped
 	OCR1AL = 0;
 	OCR1AH = 0;
 	OCR1BL = 0;
@@ -346,12 +326,26 @@ void calibrateMotors(void)
 	// Left Max Forward Calibration
 	PORTD = (LEFT_MOTOR_FORWARD)|(RIGHT_MOTOR_STOP);
 	PORTA = (1<<CALIB_BIT);
+	
+	patate2 = 0;
 
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.left;
 		
+		//if (adcValues.left > 0.5)
+		//{
+		//	patate2+=1;
+		//	PORTB = (0x0E) | (<<4);
+		//	while(1);
+		//}
+		//if (patate2<100)
+		//{
+		//	PORTB = 0x0F;
+		//	while(1);	
+		//}
 		
 	}
 	leftLimits.posMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -364,6 +358,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.left;
 	}
 	leftLimits.posZeroTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -376,6 +371,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.left;
 	}
 	leftLimits.negMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -388,10 +384,41 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.left;
 	}
 	leftLimits.negZeroTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
 	ADCcalib_value = 0.0;
+
+
+	// Remove left motor deadzone NO REMOVE DAT
+	//leftLimits.posMax -= leftLimits.posZero;
+	//leftLimits.negMax -= leftLimits.negZero;
+
+/*
+	// Set calibrated left max values
+	if (leftLimits.posMax > 1.0) // Impossible, pourrait être enlevé
+	{
+		leftLimits.adcMaxValueHigh = MAX_ADC_VALUE;
+	}
+	else
+	{
+		leftLimits.adcMaxValueHigh = (int)(leftLimits.posMax);
+	}
+	//leftLimits.negMax -= leftLimits.negZero;
+
+	if (leftLimits.negMax < -1.0)
+	{
+		leftLimits.adcMaxValueLow = MAX_ADC_VALUE;
+	}
+	else
+	{
+		leftLimits.adcMaxValueLow = (int)((-1) * leftLimits.negMax);
+	}
+*/
+
+
+
 
 	/*#######################*/
 	/*RIGHT MOTOR CALIBRATION*/
@@ -405,6 +432,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.posMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -417,6 +445,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.posZeroTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -429,6 +458,7 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.negMaxTEMP = (ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
@@ -441,12 +471,41 @@ void calibrateMotors(void)
 	for (i=0;i<CAL_SAMPLES;i++){
 		while (adcCompileReadyFlag == 0);
 		compileAdcData();
+		//waitValueIsReady();
 		ADCcalib_value += adcValues.right;
 	}
 	rightLimits.negZeroTEMP = 	(ADCcalib_value * MAX_ADC_VALUE) / CAL_SAMPLES;
 	ADCcalib_value = 0.0;
 
- //CHANGEMENT temporaire
+	// Remove right motor deadzone NO REMOVE THAT BLARG
+	//rightLimits.posMax -= rightLimits.posZero;
+	//rightLimits.negMax -= rightLimits.negZero;
+
+	// Set calibrated right max values 
+
+/* Même pas utile...
+	//TODO: [JAY]: CHECK IF THIS WORKS
+	if (rightLimits.posMax > 1.0)
+	{
+		rightLimits.adcMaxValueHigh	= MAX_ADC_VALUE;
+	}
+	else
+	{
+		rightLimits.adcMaxValueHigh = (int)(rightLimits.posMax);
+	}
+	//rightLimits.negMax -= rightLimits.negZero;
+	if (rightLimits.negMax < -1.0)
+	{
+		rightLimits.adcMaxValueLow = MAX_ADC_RATIO;
+	}
+	else
+	{
+		rightLimits.adcMaxValueLow = (int)((-1) * rightLimits.negMax);
+	}
+	
+*/ 
+
+ //CHANGEMENT pour éviter chiage
 	// Assign final values to limit var
 	leftLimits.posMax = leftLimits.posMaxTEMP;
 	leftLimits.posZero = leftLimits.posZeroTEMP;
@@ -456,6 +515,13 @@ void calibrateMotors(void)
 	rightLimits.posZero = rightLimits.posZeroTEMP;
 	rightLimits.negMax = rightLimits.negMaxTEMP;
 	rightLimits.negZero = rightLimits.negZeroTEMP;
+
+	//DEBUG LAND
+	if ((leftLimits.posMax > 25) && (leftLimits.posMax < 50))
+	{
+		PORTB=0x0E;
+		while(1);
+	}
 	
 	// End calibration
 	adcCalibrationFlag = 0;
@@ -463,7 +529,6 @@ void calibrateMotors(void)
 
 }
 
-/* Vérifier et supprimer
 void waitValueIsReady(void)
 {
 	//adcCompletedFlag = 0;		
@@ -474,4 +539,4 @@ void waitValueIsReady(void)
 
 
 }
-*/
+
