@@ -23,10 +23,9 @@
 //Brief: Set uartTxReady flag for transmit methods
 //
 ///////////////////////////////////////////
-ISR(USART_TXC_vect, ISR_NAKED) 	//TX ready     
+ISR(USART_TXC_vect) 	//TX ready     
 // signal handler for uart txd ready interrupt
 {
-	OSIntEnter();
 UDR = debugStream[debugStreamPos];
 	debugStreamPos++;
 	//uartTxReady=0;
@@ -37,7 +36,6 @@ UDR = debugStream[debugStreamPos];
 		echo_on_flag = 1;
 	}
 
-	OSIntExit();
 }
 ///////////////////////////////////////////
 //Interrupt name: ISR(USART_RXC_vect)
@@ -49,14 +47,13 @@ UDR = debugStream[debugStreamPos];
 //		 not in debug mode.
 //
 ///////////////////////////////////////////
-ISR(USART_RXC_vect, ISR_NAKED)     //RX ready 
+ISR(USART_RXC_vect)     //RX ready 
 // signal handler for receive complete interrupt
 {
-	OSIntEnter();
 	data = UDR;        // read byte for UART data buffer
 	
 	processData();
-	if ((echo_on_flag == 1))
+	if (echo_on_flag == 1)
 	{
 		//while(!uartTxReady){}
 		UDR = data;
@@ -313,7 +310,10 @@ void uartReceive(void)
 //NEW AND IMPROVED
 void sendDebugValue(char* dataToSend, unsigned char valueToSend)
 {
-
+	if (dataToSend == NULL)
+	{
+		return;
+	}
 	if (echo_on_flag)
 	{
 		UCSRB = UCSRB_REGISTER_SELECTIONS_DEBUG;	//enable TX interrupts

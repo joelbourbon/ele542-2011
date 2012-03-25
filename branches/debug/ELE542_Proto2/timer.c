@@ -23,11 +23,9 @@
 //		 on motor outputs.
 //
 ///////////////////////////////////////////
-ISR(TIMER1_OVF_vect, ISR_NAKED) //timer1 overflow
+ISR(TIMER1_OVF_vect) //timer1 overflow
 {
-	OSIntEnter();
 	motorReadyFlag = 1;	 // flag for motors
-	OSIntExit();
 }
 
 /***************************/
