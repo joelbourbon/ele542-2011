@@ -14,10 +14,10 @@
 /**************/
 /***INCLUDES***/
 /**************/
-
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "motorControl.h"
+
 
 #ifndef _ADCCONTROL_H_
 #define _ADCCONTROL_H_
@@ -53,7 +53,6 @@
 /**************************/
 /***Function prototypes****/
 /**************************/
-
 void initADC(void);
 void calibrateMotors(void);
 void readADC(void);
@@ -66,13 +65,18 @@ void compileAdcData(void);
 void fetchAdcValues(void);
 void waitValueIsReady(void);
 
-volatile float ADCcalib_value; //  Add ADC mean values during calibration
+// REMOVE
+unsigned char patate;
+unsigned char patate2;
+float allo;
 
-volatile unsigned char adcCompileReadyFlag; //When set, MAX_ADC_SAMPLES were added to a "total value" variable
+volatile float ADCcalib_value; 
 
-//extern volatile unsigned char adcCompletedFlag; //ADC mean value for current cycle computed
+volatile unsigned char adcCompileReadyFlag;
 
-volatile unsigned char adcReadyFlag;//ADC interrupt flag
+//extern volatile unsigned char adcCompletedFlag;
+
+volatile unsigned char adcReadyFlag;//Adc interrupt flag
 volatile unsigned int adcValuesCounter;		//Counter for controling the number of ADC samples to take
 volatile unsigned char adcMUXValue;			//Keeps the current state of ADC MUX register --> reading left or right ?
 //extern volatile unsigned char adcCalibrationFlag;	//0 = Normal operations 1 = Calibration mode
@@ -80,29 +84,25 @@ volatile unsigned char i; // Calibration iterator
 
 struct MotorLimits
 {
-	float posMax; // Vmax+
-	float negMax; // Vmax-
-	float posZero; // Vzero+
-	float negZero; // Vzero-
-	
-	//Added to avoid problem while using compileAdcData in calibrateMotors
-	//Could be removed by using a special ADC Data compiling function dedicated to calibrateMotors
+	float posMax;
+	float negMax;
+	float posZero;
+	float negZero;
 	float posMaxTEMP;
 	float negMaxTEMP;
 	float posZeroTEMP;
 	float negZeroTEMP;
-	//int adcMaxValueHigh;
-	//int adcMaxValueLow;
-	
-}leftLimits, rightLimits; // right & left motors
+	int adcMaxValueHigh;
+	int adcMaxValueLow;
+}leftLimits, rightLimits;
 
-//extern volatile  struct motorSpeeds adcValues; //adcValues.left  and adcValues.right on a scale of [-1 to 1]
+//extern volatile  struct motorSpeeds adcValues;
 
 
-volatile unsigned int TotalValueLeft; // Add ADC values before calculating mean value for left motor
-volatile unsigned int TotalValueRight; // Add ADC values before calculating mean value for right motor
-//volatile unsigned int ActualValueLeft;
-//volatile unsigned int ActualValueRight;
+volatile unsigned int TotalValueLeft;
+volatile unsigned int TotalValueRight;
+volatile unsigned int ActualValueLeft;
+volatile unsigned int ActualValueRight;
 //volatile unsigned char motorDirLeft;
 //volatile unsigned char motorDirRight;
 
