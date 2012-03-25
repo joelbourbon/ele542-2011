@@ -27,9 +27,17 @@ ISR(USART_TXC_vect, ISR_NAKED) 	//TX ready
 // signal handler for uart txd ready interrupt
 {
 	OSIntEnter();
-	uartTxReady = 1;
+UDR = debugStream[debugStreamPos];
+	debugStreamPos++;
+	//uartTxReady=0;
+	if (strlen((char*)debugStream) <= debugStreamPos)
+	{
+		//disable Tx interrupt
+		UCSRB = UCSRB_REGISTER_SELECTIONS;
+		echo_on_flag = 1;
+	}
+
 	OSIntExit();
-	itoa();
 }
 ///////////////////////////////////////////
 //Interrupt name: ISR(USART_RXC_vect)
@@ -50,12 +58,11 @@ ISR(USART_RXC_vect, ISR_NAKED)     //RX ready
 	processData();
 	if ((echo_on_flag == 1))
 	{
-		while(!uartTxReady){}
+		//while(!uartTxReady){}
 		UDR = data;
 	}
 
-	uartReadyFlag = 1;
-	OSIntExit();
+	//uartReadyFlag = 1;
 }
 
 /***************************/
@@ -93,6 +100,9 @@ void uart_init(void)
 	actualCommand.speed = 0;
 	actualCommand.angle = 0;
 	stopFlag = 0;
+	uartTxReady = 0;
+	strcpy((char*)debugStream, "");
+	debugStreamPos;
 }
 ///////////////////////////////////////////
 //Function name: processData
@@ -192,9 +202,23 @@ void uart_send(char *buf, unsigned char size)
 ///////////////////////////////////////////
 void transmitByte(unsigned char dataToSend)
 {
-	while(!uartTxReady){}	//wait transmitter is ready	
-	uartTxReady = 0;		//reset tx ready flag
-	UDR = dataToSend;		//send data
+	//while(!uartTxReady){}	//wait transmitter is ready	
+	//uartTxReady = 0;		//reset tx ready flag
+	//UDR = dataToSend;		//send data
+
+
+	if (uartTxReady)
+	{
+		UDR = debugStream[debugStreamPos];
+		debugStreamPos++;
+		//uartTxReady=0;
+		if (strlen((char*)debugStream) == debugStreamPos)
+		{
+			//disable Tx interrupt
+			UCSRB = UCSRB_REGISTER_SELECTIONS;
+			echo_on_flag = 1;
+		}
+	}
 }
 
 ///////////////////////////////////////////
@@ -286,5 +310,35 @@ void uartReceive(void)
 	uart_send((char*)string_valueToSend, strlen((char*)string_valueToSend));
 }
 */
+//NEW AND IMPROVED
+void sendDebugValue(char* dataToSend, unsigned char valueToSend)
+{
+
+	if (echo_on_flag)
+	{
+		UCSRB = UCSRB_REGISTER_SELECTIONS_DEBUG;	//enable TX interrupts
+		echo_on_flag = 0;
+	
+		strncpy((char*)debugStream, dataToSend, strlen((char*)debugStream));
+		//missing debug value
+		//missing end stream;
+		
+		
+		debugStream[strlen((char*)debugStream)] = valueToSend;
+		debugStream[strlen((char*)debugStream)] = 0xFF;
+		//strcat((char*)debugStream, debugValueToSend);
+		//strcat((char*)debugStream, 0xFE);
+		//sprintf("%s %i%c",dataToSend, valueToSend, 0xFF);
+
+	
+		UDR = 0xFE;
+		debugStreamPos = 0;
+		//uartTxReady
+	}
+
+
+
+
+}
 
 

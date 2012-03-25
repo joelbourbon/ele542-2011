@@ -11,7 +11,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
-//#include "string.h"	//debug not used anymore
+#include "string.h"	//debug not used anymore
 #include "motorControl.h"
 
 #ifndef _UART_H_
@@ -37,7 +37,8 @@
 /* configure asynchronous operation, no parity, 1 stop bit, 8 data bits, Tx on rising edge */
 #define UCSRC_REGISTER_SELECTIONS	((1<<URSEL)|(0<<UMSEL)|(0<<UPM1)|(0<<UPM0)|(0<<USBS)|(1<<UCSZ1)|(1<<UCSZ0)|(0<<UCPOL))
 /* enable RxD/TxD and Rx int */
-#define UCSRB_REGISTER_SELECTIONS	((1<<RXCIE)|(1<<TXCIE)|(1<<RXEN)|(1<<TXEN)|(0<<UCSZ2))
+#define UCSRB_REGISTER_SELECTIONS	((1<<RXCIE)|(1<<TXCIE)|(1<<RXEN)|(0<<TXEN)|(0<<UCSZ2))
+#define UCSRB_REGISTER_SELECTIONS_DEBUG	((1<<RXCIE)|(1<<TXCIE)|(1<<RXEN)|(1<<TXEN)|(0<<UCSZ2))
 
 
 //Receiver state machine
@@ -63,6 +64,9 @@ volatile unsigned char uartTxReady;				//Ready to send data
 //volatile char uartTxReady;// = 1;
 volatile char string_valueToSend[MAX_VALUE_TO_SEND];
 
+volatile unsigned char debugStream[100];
+volatile unsigned char debugValueToSend[10];
+volatile unsigned char debugStreamPos;
 //Extern Globals
 //extern volatile struct MotorCommands requestedCommand;
 //extern volatile struct MotorCommands actualCommand;
