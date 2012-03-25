@@ -141,7 +141,7 @@ static  void  Task_MainLoop (void *p_arg)
 			  uartReceive();
 			  checkForAdc();
 			  dealWithMotors();
-			  processTWI();
+			  //processTWI();
 			  //TWI thingy
 	    
 		    // PORTB = 0xFF;        
