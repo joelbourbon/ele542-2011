@@ -11,8 +11,7 @@
 /**************/
 /***INCLUDES***/
 /**************/
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include "ucos_core/includes.h"
 
 
 #ifndef _LEDSCONTROL_H_

@@ -21,6 +21,6 @@
 
 #include  "os_cpu.h"
 #include  "os_cfg.h"
-#include  "ucos_core/ucos_ii.h"
+#include  "ucos_ii.h"
 
 #endif

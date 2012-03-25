@@ -13,8 +13,7 @@
 /**************/
 /***INCLUDES***/
 /**************/
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include "ucos_core/includes.h"
 #include "sonars.h"
 
 #ifndef _TIMER_H_

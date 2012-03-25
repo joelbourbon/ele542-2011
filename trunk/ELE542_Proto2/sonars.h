@@ -12,8 +12,7 @@
 /**************/
 /***INCLUDES***/
 /**************/
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include "ucos_core/includes.h"
 #include "LedsControl.h"
 
 #ifndef _SONARS_H_

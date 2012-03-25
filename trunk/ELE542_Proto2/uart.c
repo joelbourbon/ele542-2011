@@ -29,7 +29,6 @@ ISR(USART_TXC_vect, ISR_NAKED) 	//TX ready
 	OSIntEnter();
 	uartTxReady = 1;
 	OSIntExit();
-	itoa();
 }
 ///////////////////////////////////////////
 //Interrupt name: ISR(USART_RXC_vect)

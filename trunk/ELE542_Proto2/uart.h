@@ -8,8 +8,7 @@
 //Author: Vincent Léger, Jason Cormier
 //
 ////////////////////////////////////////////////////////
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include "ucos_core/includes.h"
 #include <avr/wdt.h>
 //#include "string.h"	//debug not used anymore
 #include "motorControl.h"
